@@ -10,7 +10,7 @@
  */
 
 // Which board we are compiling for
-// We will definitately need this if we are using the 'proper' attachInterrupt() calls, but we are cheating anyway.
+// We will definitely need this if we are using the 'proper' attachInterrupt() calls, but we are cheating anyway.
 //#define ARDUINO_NANO
 
 #include <Arduino.h>
