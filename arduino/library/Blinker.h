@@ -21,9 +21,9 @@
  * We use the two-blink starters for 'running-states' (eg 'moving', 'pausing to think')
  * We use the three-blink starters for 'error-states' (eg 'engine stalled', 'I've driven into the dam', ..)
  * AUTHOR
- *     Scott Barnes
+ *     Scott BARNES
  * COPYRIGHT
- *     Copyright 2017/2018 All Rights Reserved.
+ *     Scott BARNES 2017/2018. IP freely on non-commercial applications.
  */
 
 #ifndef Blinker_h
@@ -42,12 +42,12 @@
 
 class Blinker {
 private:
-    int ledPin;           // Which pin the LED is on. 13 on the Nano.
+    byte pin;             // Which pin the LED is on. 13 on the Nano.
     uint32_t pattern;     // 32-bit pattern eg 0x00000505 is two-then-two.
-    int blinkPosition;    // Where in the 32-bit mask we currently are.
+    byte blinkPosition;    // Where in the 32-bit mask we currently are.
     uint32_t nextBlinkAt; // When millis() is at this value, we display the next bit.
 public:
-    Blinker(int ledPin = 13);
+    Blinker(byte pin = LED_BUILTIN);
     void setBlinkPattern(uint32_t blinkPattern);
     void setup();
     void loop(uint32_t now);

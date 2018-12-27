@@ -1,10 +1,9 @@
 //-*- mode: c -*-
 /*
- * Example of use of ParkingSensor1 class.
+ * Example of use of the Bumper class.
  * @see
- * ParkingSensor1.h
- * ParkingSensor1.cpp
- * http://allegrobotics.com/parkingSensor.html
+ * Bumper.h
+ * Bumper.cpp
  * COPYRIGHT
  *     Scott BARNES 2017/2018. IP freely on non-commercial applications.
  */
@@ -12,22 +11,22 @@
 #include <Arduino.h>
 
 #include "Blinker.h"
-#include "ParkingSensor1.h"
+#include "Bumper.h"
 
 Blinker blinker(LED_BUILTIN);
-ParkingSensor1 parkingSensor1(2);
+Bumper  bumper(12);
 
 // The setup routine runs once when you reset.
 void setup() {
     delay(3000); // Delay startup to be sure we can get in first to re-flash.
     Serial.begin(19200);
-    parkingSensor1.setup();
+    bumper.setup();
     blinker.setup();
 }
 
 // The loop routine runs over and over again forever.
 void loop() {
     unsigned long now = millis();
-    parkingSensor1.loop(now);
     blinker.loop(now);
+    bumper.loop(now);
 }

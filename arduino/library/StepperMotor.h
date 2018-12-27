@@ -28,7 +28,7 @@
  * AUTHOR
  *     Scott Barnes
  * COPYRIGHT
- *     Copyright 2016/2017/2018 All Rights Reserved.
+ *     Scott BARNES 2016/2017/2018. IP freely on non-commercial applications.
  */
 
 #ifndef StepperMotor_h
@@ -37,33 +37,27 @@
 #include <Arduino.h>
 
 class StepperMotor {
-private:
-    int stepPin;         // Step pin on the EasyDriver
-    int directionPin;    // Direction pin on the EasyDriver
-    int enablePin;       // Enable pin on the EasyDriver
-    int sleepPin;        // Sleep pin on the EasyDriver
-    int ms1Pin;          // MS1 pin on the EasyDriver.
-    int ms2Pin;          // MS2 pin on the EasyDriver.
-    int resetPin;        // Reset pin on the EasyDriver.
-    uint32_t nextStepAt; // millis() must return this before we do the next step.
-    uint8_t stepIsHigh;  // Hold this high for one loop() just to trigger the EasyDriver.
-    void dump();         // Debugging
 public:
-    int position;    // Position (ie angle (possibly in 200ths of a rotation).
-    int speed;       // millisecondsn between pulses.
+    int position;    // Position (ie angle (possibly in 200ths of a rotation == 1.8 degrees)).
+    int speed;       // milliseconds between pulses.
+
     StepperMotor(int stepPin, int directionPin = -1, int enablePin = -1, int sleepPin = -1, int ms1Pin = -1, int ms2Pin = -1, int resetPin = -1);
+
     /**
      * @param speed milliseconds between pulses (note if microstepping, then there will be multiple pulses per step).
      */
     void setSpeed(int speed);
+
     /**
      * Does initialization.
      */
     void setup();
+
     /**
      * Called often.
      */
     void loop(uint32_t now);
+
     /**
      * Set the known position, of the turret.
      * This could be called when the position detector is triggered.
@@ -75,6 +69,18 @@ public:
     void setSleep(int sleep);
 
     void setMicrostepping(int steps);
+
+private:
+    int stepPin;         // Step pin on the EasyDriver
+    int directionPin;    // Direction pin on the EasyDriver
+    int enablePin;       // Enable pin on the EasyDriver
+    int sleepPin;        // Sleep pin on the EasyDriver
+    int ms1Pin;          // MS1 pin on the EasyDriver
+    int ms2Pin;          // MS2 pin on the EasyDriver
+    int resetPin;        // Reset pin on the EasyDriver
+    uint32_t nextStepAt; // millis() must return at least this before we do the next step
+    uint8_t stepIsHigh;  // Hold this high for one loop() just to trigger the EasyDriver
+    void dump();         // Debugging
 };
 
 #endif /* StepperMotor_h */

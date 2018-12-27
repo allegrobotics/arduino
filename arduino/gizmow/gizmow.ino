@@ -1,33 +1,48 @@
 //-*- mode: c -*-
 /*
- * Example of use of ParkingSensor2 class.
+ * The GizMow uses the ParkingSensor, the Rpm and the collision Bumper.
  * @see
+ * http://allegrobotics.com/parkingSensor.html
  * ParkingSensor2.h
  * ParkingSensor2.cpp
- * http://allegrobotics.com/parkingSensor.html
+ * Rpm.h
+ * Rpm.cpp
+ * Bumper.h
+ * Bumper.cpp
+ * Blinker.h
+ * Blinker.cpp
  * COPYRIGHT
  *     Scott BARNES 2018. IP freely on non-commercial applications.
  */
 
 #include <Arduino.h>
-
 #include "Blinker.h"
+//#include "ParkingSensor1.h"
 #include "ParkingSensor2.h"
+#include "Bumper.h"
+#include "Rpm.h"
 
 Blinker        blinker(LED_BUILTIN);
-ParkingSensor2 parkingSensor2(2);
+//ParkingSensor1 parkingSensor(2);
+ParkingSensor2 parkingSensor(2);
+Rpm            rpm(3);
+Bumper         bumper(12);
 
 // The setup routine runs once when you reset.
 void setup() {
     delay(3000); // Delay startup to be sure we can get in first to re-flash.
     Serial.begin(19200);
-    parkingSensor2.setup();
+    parkingSensor.setup();
+    rpm.setup();
+    bumper.setup();
     blinker.setup();
 }
 
 // The loop routine runs over and over again forever.
 void loop() {
     unsigned long now = millis();
-    parkingSensor2.loop(now);
+    parkingSensor.loop(now);
+    bumper.loop(now);
+    rpm.loop(now);
     blinker.loop(now);
 }

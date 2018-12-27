@@ -5,16 +5,16 @@
  * PURPOSE
  *     Arduino Nano controlling a TF Mini Lidar on a rotating turret. http://allegrobotics.com/lidarLiteSweeper.html
  * COPYWRIGHT
- *     Scott BARNES 2018
- *     IP Freely on non-commercial applications.
+ *     Scott BARNES 2018. IP freely on non-commercial applications.
  * DETAIL
  *     Setup consists of 
  *     1. TF Mini Lidar mounted on a slip ring and connected to an input pin, and communicating at 19200 baud.
  *     2. Steeper motor to rotate the lidar through 360 degrees, controlled by an Easy Driver.
  *     3. A photointerrupter (or switch or something) which gets set once per revolution.
  * PHILOSOPHY
+ * This is not presented as a C++ module, which can be integrated with other modules as it is unlikely to play well with modules - the timing is too tight.
  * This application is actually a bit of challenge with just an Arduino Nano.
- * It would be a lot easier with a Mega (or Mega clone), but part of the challenge is to use the smallest and cheapest device available to man or beast or robot.
+ * It would be a lot easier with a Mega (or Mega clone), but part of the challenge is to use the smallest and cheapest device available to man, beast or bot.
  * This even works with the cheap Nanos (with the non-buffered USB serial converters) from Sum Ting Wong (my favourite supplier), which are available through eBay for around $AU3.30 each.
  * SEE
  * http://allegrobotics.com/lidarLiteSweeper.html
@@ -24,14 +24,14 @@
 #include <Arduino.h>
 
 /**
- * This is the pin layout. It looks very illogical. It is. It was designed around the physical placement, which optimized for space on a V-board to fit into the smallest.
+ * This is the pin layout. It looks very illogical. It is. It was designed around the physical placement, which optimized for space on a V-board to fit into the smallest space.
  */
 const int ledPin = 13;                 // Not much choice here - it's what the Nano does.
 const int photointerrupterPin = 4;     // The pin to read the status of the photointerrupter.
 const int serialReadPin = 5;           // The pin to read from the TF Mini Lidar at 19200 baud.
 const int stepPin = 11;                // Easy Driver STEP pin
 const int directionPin = 12;           // Easy Driver DIR pin
-const int enablePin = 7;               // Easy Driver STEP pin
+const int enablePin = 7;               // Easy Driver ENABLE pin
 const int sleepPin = 2;                // Easy Driver SLP pin
 const int ms1Pin = 3;                  // Easy Driver MS1 pin
 const int ms2Pin = 8;                  // Easy Driver MS2 pin

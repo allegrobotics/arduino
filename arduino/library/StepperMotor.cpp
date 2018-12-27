@@ -5,7 +5,7 @@
  * AUTHOR
  *     Scott Barnes
  * COPYRIGHT
- *     2018
+ *     Scott BARNES 2018. IP freely on non-commercial applications.
  */
 #include "StepperMotor.h"
 
@@ -38,7 +38,8 @@ StepperMotor::StepperMotor(int stepPin, int directionPin, int enablePin, int sle
 }
 
 void StepperMotor::dump() {
-    Serial.print("D STP "); Serial.print(stepPin);
+    Serial.print("TD");
+    Serial.print(" STP "); Serial.print(stepPin);
     Serial.print(" DIR "); Serial.print(directionPin);
     Serial.print(" ENB "); Serial.print(enablePin);
     Serial.print(" SLP "); Serial.print(sleepPin);
@@ -68,6 +69,10 @@ void StepperMotor::setMs2(int ms2) {
         digitalWrite(ms2Pin, ms2 ? HIGH : LOW);
 }
 
+/**
+ * Should be called by setup() in the .ino sketch.
+ * PREREQUISITE: Serial.begin(...) must be called before this is.
+ */
 void StepperMotor::setup() {
     if (enablePin >= 0)
         digitalWrite(enablePin, LOW);
@@ -77,6 +82,7 @@ void StepperMotor::setup() {
         digitalWrite(ms1Pin, HIGH);
     if (ms2Pin >= 0)
         digitalWrite(ms2Pin, HIGH);
+        Serial.println("I StepperMotor ready.");
 }
 
 /**
