@@ -44,15 +44,17 @@
 
 #include <Arduino.h>
 
-#define DEFAULT_SPARKPLUG_READ_PIN    3 // Only pins 2 and 3 are capable of this function on the Nano
+#define DEFAULT_SPARKPLUG_PIN            2 /* Use 2 for D2, 3 for D3 */
+#define DEFAULT_SPARKPLUG_PIN_INTERRUPT  0 /* digitalPinToInterrupt(DEFAULT_SPARKPLUG_PIN) */
 
 class Rpm {
 public:
-    Rpm(byte pin = DEFAULT_SPARKPLUG_READ_PIN);
+    Rpm(byte pin = DEFAULT_SPARKPLUG_PIN, byte pinInterrupt = DEFAULT_SPARKPLUG_PIN_INTERRUPT);
     void setup();
     void loop(uint32_t now);
 private:
     byte pin;
+    byte pinInterrupt;
     void initializePins(void);
     void sendRpmViaSerialPort();
     static char *hex;

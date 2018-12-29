@@ -17,7 +17,10 @@
  *     2. Tank activation is via a relay.
  *     3. Measuring water quantity is with a flowMeter.
  * RX/TX OUTPUT TO HOST
- *     "DJ0" tank not full "DJ1" tank full.
+ *     "DJ00" tank not full, hook off
+ *     "DJ11" tank full, hook on
+ *     "DJ00" tank not full, hook off
+ *     "DJ11" tank full, hook on
  *     "DKnnnnnn" pulse counter count (eg K12345 means counter is at 12345).
  *     "DP0" pump turned off due to no (or little) flow.
  * RX/TX INPUT FROM HOST
@@ -25,12 +28,16 @@
  *      "D0" pump off.
  *      "D1" pump on.
  *      All other input ignored.
+ * THE HOOK
+ *      Untested and und unbuilt - the hook is just a microswitch on the rover's tank which is intended to change state when the rover is in the fill position.
  * TESTING
  *      UNTESTED AS AT 2018-11-11
  * REQUIREMENTS
  *      Assumes that Serial.begin(...) has been called before setup() is run.
  * BUGS
  * Ignores the flowMeterPin passed to constructor. Always uses pin D3.
+ * PARAMETERS
+        flomMeterPinInterrupt on Nano and similar use 0 for pin D2, and 1 for pin D3.
  */
 
 #ifndef WaterDispenser_h
@@ -39,22 +46,24 @@
 #include <Arduino.h>
 
 class WaterDispenser {
+public:
+    WaterDispenser(byte floatPin, byte pumpPin, byte flowMeterPin, byte flowMeterPinInterrupt, byte hookPin);
+    void setup();
+    void loop(uint32_t now);
+    static void pulseReceivedFromFlowMeter();
+    void sendFlowMeterCountViaSerialPort();
 private:
     byte floatPin;                       // Float switch tests for full tank.
     byte pumpPin;                        // To turn pump on / off.
-    byte flowMeterPin;                   // Ignored - we use first interrupt.
+    byte flowMeterPin;                   // The pin connected to the flow meter.
+    byte flowMeterPinInterrupt;          // For Nano and similar, use 0 for D2, 1 for D3
+    byte hookPin;                        // A switch which should activate when we are in receiving position.
     uint32_t pumpStartedAt = 0;          // 0 => pump is off, otherwise, the time it was started.
     volatile static uint32_t pulseCount;
     uint32_t lastReportedPulseCount = 0;
     uint32_t nextReportAt = 0L;
     void initializePins(void);
     void switchPump(byte mode, uint32_t now);
-public:
-    WaterDispenser(byte floatPin, byte pumpPin, byte flowMeterPin);
-    void setup();
-    void loop(uint32_t now);
-    static void pulseReceivedFromFlowMeter();
-    void sendFlowMeterCountViaSerialPort();
 };
 
 #endif /* WaterDispenser_h */

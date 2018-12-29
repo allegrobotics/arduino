@@ -19,6 +19,8 @@
 
 #define STATE_TIME_THRESHOLD_US 400  /* 800us per bit, 266us per state, less than 400 is 1, more than 400 is 0 */
 
+byte ParkingSensor2::pin;
+byte ParkingSensor2::pinInterrupt;
 char *ParkingSensor2::hex = "0123456789ABCDEF";
 
 /**
@@ -36,15 +38,12 @@ extern Blinker blinker;
 volatile uint16_t parkingSensor2Cubby;      // This is actually the 16-bit packet read from the sensor controller.
 volatile byte parkingSensor2DataAvailable;  // 0 => no data to send, 1 => send data to host.
 
-/*
-ParkingSensor2::ParkingSensor2() {
-    this->pin = PWM_READ_PIN;
-    dataLastSentAt = 0L;
-}
-*/
-
-ParkingSensor2::ParkingSensor2(byte pin) {
+/**
+ * @param pinInterrupt must be digitalPinToInterrupt(pin)
+ */
+ParkingSensor2::ParkingSensor2(byte pin, byte pinInterrupt) {
     this->pin = pin;
+    this->pinInterrupt = pinInterrupt;
     dataLastSentAt = 0L;
 }
 
@@ -57,7 +56,7 @@ void ParkingSensor2::fallingEdge() {
     // The 'correct' form of the attachInterrupt call:
     //attachInterrupt(digitalPinToInterrupt(PWM_READ_PIN), risingEdge, RISING);
     // .. but that fails for some reason (old .h libraries?), so for the Nano we just cheat and use this:
-    attachInterrupt(0, risingEdge, RISING);
+    attachInterrupt(pinInterrupt, risingEdge, RISING);
     if (pwmValue > 800) {          // This is one of the big end-frame or start-frame lows.
         if (bitCounter % 16 != 0)  // We should have finished a nibble before getting this.
             Serial.println("PX");  // Report framing error. Reader should ignore (or report) any line arriving with an X in it. Normally we wouldn't call Serial.println in the interrupt, but something has gone wrong anyway.
@@ -99,6 +98,7 @@ void ParkingSensor2::risingEdge() {
  * PREREQUISITE: Serial.begin(...) must be called before this.
  */
 void ParkingSensor2::setup() {
+    pinMode(pin, INPUT_PULLUP);
     // The 'correct' form of the attachInterrupt call:
     //attachInterrupt(digitalPinToInterrupt(PWM_READ_PIN), risingEdge, RISING);
     // .. but that fails for some reason (old .h libraries?), so for the Nano we just cheat and use this:

@@ -59,16 +59,17 @@
 
 #include <Arduino.h>
 
-#define DEFAULT_PARKING_SENSOR_READ_PIN              2  /* Only pins 2 and 3 are capable of this function on the Nano */
+#define DEFAULT_PARKING_SENSOR_PIN                   2  /* For Nano and similar 2 for D2, 3 for D3 */
+#define DEFAULT_PARKING_SENSOR_READ_PIN              0  /* digitalPinToInterrupt(DEFAULT_PARKING_SENSOR_PIN) */
 
 class ParkingSensor1 {
 public:
-    //ParkingSensor1();
-    ParkingSensor1(byte pin = DEFAULT_PARKING_SENSOR_READ_PIN);
+    ParkingSensor1(byte pin = DEFAULT_PARKING_SENSOR_PIN, byte pinInterrupt = DEFAULT_PARKING_SENSOR_READ_PIN);
     void setup();
     void loop(uint32_t now);
 private:
-    byte pin;
+    static byte pinInterrupt;
+    static byte pin;
     uint32_t dataLastSentAt;   // The time (millis()) we last sent some data to the host.
     static void risingEdge();
     static void fallingEdge();

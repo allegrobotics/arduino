@@ -43,14 +43,11 @@ unsigned long Rpm::previousMillis;
 volatile int Rpm::smoothedRpm;
 
 /*
-Rpm::Rpm() {
-    this->pin = SPARKPLUG_READ_PIN;
-    dataLastSentAt = 0L;
-}
-*/
-
-Rpm::Rpm(byte pin) {
+ * @param pinInterrupt must be digitalPinToInterrupt(pin)
+ */
+Rpm::Rpm(byte pin, byte pinInterrupt) {
     this->pin = pin;
+    this->pinInterrupt = pinInterrupt;
     //dataLastSentAt = 0L;
 }
 
@@ -121,9 +118,9 @@ void Rpm::sendRpmViaSerialPort() {
  * PREREQUISITE: Serial.begin(...) must be called before this.
  */
 void Rpm::setup() {
-    pinMode(pin, INPUT); // Read from spark-plug pin
+    pinMode(pin, INPUT_PULLUP); // Read from spark-plug pin
     //attachInterrupt(digitalPinToInterupt(pin), pulseReceived, FALLING);
-    attachInterrupt(1, pulseReceived, FALLING); // Presumably digitalPinToInterrupt(3) == 1. To do: test this!
+    attachInterrupt(pinInterrupt, pulseReceived, FALLING); // D2 is pinInterrupt 0, and D3 is pinInterrupt 1 on Nano and similar.
     previousMillis = millis();
     //Serial.begin(19200); must be done in .ino
     rpmPacket[0] = 'R';

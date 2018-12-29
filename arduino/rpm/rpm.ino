@@ -17,8 +17,11 @@
 #include "Blinker.h"
 #include "Rpm.h"
 
+#define RPM_PIN           2 /* 2 for pin D2, 3 for pin D3 */
+#define RPM_PIN_INTERRUPT 0 /* digitalPinToInterrupt(RPM_PIN) */
+
 Blinker blinker(LED_BUILTIN);
-Rpm rpm(3);          // If we intend to run this in conjunction with the ParkingSensor, then use pin 3 on the Nano.
+Rpm rpm(RPM_PIN, RPM_PIN_INTERRUPT);          // If we intend to run this in conjunction with the ParkingSensor, then use pin D3 on the Nano.
 
 void setup() {
     delay(3000);

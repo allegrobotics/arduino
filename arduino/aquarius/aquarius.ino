@@ -17,20 +17,23 @@
 #include "Blinker.h"
 #include "WaterDispenser.h"
 // Use either ParkingSensor1 or ParkingSensor2 depending on what came in the mail from Mr eBay.
-//#include "ParkingSensor1.h"
-#include "ParkingSensor2.h"
+#include "ParkingSensor1.h"
+//#include "ParkingSensor2.h"
 #include "Bumper.h"
 
-#define PARKING_SENSOR_READ_PIN 2
-#define FLOW_METER_PIN          3
-#define FLOAT_PIN               4
-#define PUMP_PIN                5
-#define BUMPER_PIN              6
+#define PARKING_SENSOR_PIN           2 /* 2 for pin D2, 3 for pin D3. */
+#define PARKING_SENSOR_PIN_INTERRUPT 0 /* digitalPinToInterrupt(PARKING_SENSOR_PIN) */
+#define FLOW_METER_PIN               3 /* 2 for pin D2, 3 for pin D3. */
+#define FLOW_METER_PIN_INTERRUPT     1 /* digitalPinToInterrupt(FLOW_METER_PIN) */
+#define FLOAT_PIN                    4
+#define PUMP_PIN                     5
+#define BUMPER_PIN                   6
+#define HOOK_PIN                     7
 
 Blinker blinker(LED_BUILTIN);
-WaterDispenser waterDispenser(FLOAT_PIN, PUMP_PIN, FLOW_METER_PIN);
-//ParkingSensor1 parkingSensor(PARKING_SENSOR_READ_PIN);
-ParkingSensor2 parkingSensor(PARKING_SENSOR_READ_PIN);
+WaterDispenser waterDispenser(FLOAT_PIN, PUMP_PIN, FLOW_METER_PIN, FLOW_METER_PIN_INTERRUPT, HOOK_PIN);
+ParkingSensor1 parkingSensor(PARKING_SENSOR_PIN, PARKING_SENSOR_PIN_INTERRUPT);
+//ParkingSensor2 parkingSensor(PARKING_SENSOR_PIN, PARKING_SENSOR_PIN_INTERRUPT);
 Bumper bumper(BUMPER_PIN);
 
 void setup() {

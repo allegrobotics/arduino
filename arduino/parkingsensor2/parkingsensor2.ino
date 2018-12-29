@@ -14,8 +14,11 @@
 #include "Blinker.h"
 #include "ParkingSensor2.h"
 
+#define PARKING_SENSOR_PIN           2 /* 2 for pin D2, 3 for pin D3 */
+#define PARKING_SENSOR_PIN_INTERRUPT 0 /* digitalPinToInterrupt(PARKING_SENSOR_PIN_INTERRUPT) */
+
 Blinker        blinker(LED_BUILTIN);
-ParkingSensor2 parkingSensor2(2);
+ParkingSensor2 parkingSensor2(PARKING_SENSOR_PIN, PARKING_SENSOR_PIN_INTERRUPT);
 
 // The setup routine runs once when you reset.
 void setup() {

@@ -44,7 +44,8 @@
  *
  * The protocol - from the parking sensor is 33%/66% duty cycle PWM, LOW is 0V, HIGH is 5V.
  * A 16-bit packet is sent every 33ms or so.
- * Pin D2 on the Nano can be triggered by rising or falling inputs, so we watch this, and analyse the time between rises and falls.
+ * Pins D2 (interrupt 0) and D3 (interrupt 1) on the Nano can be triggered by rising or falling inputs, so we watch one of these
+ * and analyse the time between rises and falls.
  * Between each packet, there is:  25000us LOW, 900us HIGH, 1500us LOW, 100us HIGH.
  * Each packet consists of 16 bits, and we read MSB first.
  * Each bit is 266us HIGH, 266us { LOW if 1, HIGH if 0 }, 266us LOW.
@@ -59,16 +60,17 @@
 
 #include <Arduino.h>
 
-#define DEFAULT_PARKING_SENSOR_READ_PIN              2  /* Only pins 2 and 3 are capable of this function on the Nano */
+#define DEFAULT_PARKING_SENSOR_PIN                  2  /* Use 2 for D2, 3 for D3 */
+#define DEFAULT_PARKING_SENSOR_PIN_INTERRUPT        0  /* digitalPinToInterrupt(DEFAULT_PARKING_SENSOR_PIN) */
 
 class ParkingSensor2 {
 public:
-    //ParkingSensor2();
-    ParkingSensor2(byte pin = DEFAULT_PARKING_SENSOR_READ_PIN);
+    ParkingSensor2(byte pin = DEFAULT_PARKING_SENSOR_PIN, byte pinInterrupt = DEFAULT_PARKING_SENSOR_PIN_INTERRUPT);
     void setup();
     void loop(uint32_t now);
  private:
-    byte pin;
+    static byte pin;
+    static byte pinInterrupt;
     uint32_t dataLastSentAt;             // The time (millis()) that we last sent data to the host.
     volatile int sensorTimesDistanceCm; // Cubby for value to send to the host. This is the sensor (a = 0, b = 1 .. h = 7
     static void risingEdge();

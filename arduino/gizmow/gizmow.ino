@@ -22,11 +22,18 @@
 #include "Bumper.h"
 #include "Rpm.h"
 
+#define PARKING_SENSOR_PIN           2 /* 2 for pin D2, 3 for pin D3 */
+#define PARKING_SENSOR_PIN_INTERRUPT 0 /* digitalPinToInterrupt(PARKING_SENSOR_PIN) */
+#define RPM_PIN                      3 /* 2 for pin D2, 3 for pin D3 */
+#define RPM_PIN_INTERRUPT            1 /* digitalPinToInterrupt(RPM_PIN) */
+#define BUMPER_PIN                  12
+
 Blinker        blinker(LED_BUILTIN);
-//ParkingSensor1 parkingSensor(2);
-ParkingSensor2 parkingSensor(2);
-Rpm            rpm(3);
-Bumper         bumper(12);
+// Use either ParkingSensor1 or ParkingSensor2 - whatever turns up in the box from eBay :)
+//ParkingSensor1 parkingSensor(PARKING_SENSOR_PIN_INTERRUPT);
+ParkingSensor2 parkingSensor(PARKING_SENSOR_PIN_INTERRUPT);
+Rpm            rpm(RPM_PIN, RPM_PIN_INTERRUPT);
+Bumper         bumper(BUMPER_PIN);
 
 // The setup routine runs once when you reset.
 void setup() {

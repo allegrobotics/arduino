@@ -25,12 +25,14 @@ extern Blinker blinker;
 volatile uint32_t WaterDispenser::pulseCount = 0;
 
 /**
- * @param flowMeterPin ignored - we just use interrupt 0 (ie pin 2) on Nano. Fix me.
+ * @param flowMeterPinInterrupt must be digitalPinToInterrupt(flowMeterPin)
  */
-WaterDispenser::WaterDispenser(byte floatPin, byte pumpPin, byte flowMeterPin) {
+WaterDispenser::WaterDispenser(byte floatPin, byte pumpPin, byte flowMeterPin, byte flowMeterPinInterrupt, byte hookPin) {
     this->floatPin = floatPin;
     this->pumpPin = pumpPin;
     this->flowMeterPin = flowMeterPin;
+    this->flowMeterPinInterrupt = flowMeterPinInterrupt;
+    this->hookPin = hookPin;
 }
 
 /**
@@ -47,11 +49,12 @@ void WaterDispenser::pulseReceivedFromFlowMeter() {
  * PREREQUISITE: Serial.begin(...) must be called before this.
  */
 void WaterDispenser::setup() {
-    pinMode(floatPin, INPUT);        // We will read from float switch pin
-    pinMode(pumpPin, OUTPUT);        // We will write to the pump relay pin
-    digitalWrite(pumpPin, HIGH);     // Reversed from intuition - change if required.
-    attachInterrupt(1, pulseReceivedFromFlowMeter, FALLING); // Presumably digitalPinToInterrupt(3) == 1. To do: test this!
     //Serial.begin(19200); must be done in .ino
+    pinMode(floatPin, INPUT_PULLUP);     // We will read from float switch pin
+    pinMode(pumpPin, OUTPUT);            // We will write to the pump relay pin
+    digitalWrite(pumpPin, HIGH);         // Reversed from intuition - change if required
+    pinMode(flowMeterPin, INPUT_PULLUP); // We will read from float switch pin
+    attachInterrupt(flowMeterPinInterrupt, pulseReceivedFromFlowMeter, FALLING);
     Serial.println("I WaterDispenser ready.");
 }
 
@@ -74,15 +77,15 @@ byte inputState = 0; // 0=>idle 1=>just read new line 2=>just read 'P' after new
  */
 void WaterDispenser::loop(uint32_t now) {
     if (now > nextReportAt) {
-        if (pumpStartedAt != 0 && now - pumpStartedAt > 2000 && pulseCount - lastReportedPulseCount < 10) { // (almost) no flow for 2s? Turn off pump and notify user.
+        if (pumpStartedAt != 0 && now - pumpStartedAt > 2000 && pulseCount - lastReportedPulseCount < 10) { // (almost) no flow for 2s? Turn off pump and notify host.
             switchPump(0 , now);
             Serial.println("DP0");
             Serial.println("DI no flow stopping pump");
             blinker.setBlinkPattern(BLINK_31);
         }
         lastReportedPulseCount = pulseCount;
-        Serial.println(digitalRead(floatPin) == LOW ? "DJ0" : "DJ1");
-        Serial.print("DK");
+        Serial.print(digitalRead(floatPin) == LOW ? "DJ0" : "DJ1");
+        Serial.print(digitalRead(hookPin) == LOW ? "0\r\nDK" : "1\r\nDK");
         Serial.println(lastReportedPulseCount);
         Serial.println(pumpStartedAt == 0 ? "DP0" : "DP1");
         nextReportAt = now + 500;

@@ -29,6 +29,9 @@ volatile byte dataAvailable = 0;  // Set to true when we want loop() to write mo
 
 extern Blinker blinker;
 
+byte ParkingSensor1::pin;
+byte ParkingSensor1::pinInterrupt;
+
 /*
 ParkingSensor1::ParkingSensor1() {
     this->pin = READ_PIN;
@@ -36,8 +39,12 @@ ParkingSensor1::ParkingSensor1() {
 }
 */
 
-ParkingSensor1::ParkingSensor1(byte pin) {
+/**
+ * @param pinInterrupt must be digitalPinToInterrupt(pin)
+ */
+ParkingSensor1::ParkingSensor1(byte pin, byte pinInterrupt) {
     this->pin = pin;
+    this->pinInterrupt = pinInterrupt;
     dataLastSentAt = 0L;
 }
 
@@ -48,8 +55,9 @@ void ParkingSensor1::risingEdge() {
     int pwmValue = micros() - timeOfFall;
     // The 'correct' form of the attachInterrupt call:
     //attachInterrupt(digitalPinToInterrupt(READ_PIN), fallingEdge, FALLING);
-    // .. but that fails for some reason (old .h libraries?), so for the Nano we just cheat and use this:
-    attachInterrupt(0, fallingEdge, FALLING);
+    // .. but that fails for some reason (old .h libraries?), so for the Nano and similar we use:
+    pinMode(pin, INPUT_PULLUP);
+    attachInterrupt(pinInterrupt, fallingEdge, FALLING);
     if (pwmValue > 900) {           // This is one of the big end-frame or start-frame lows.
         if (numBitsRead % 4 != 0)   // We should have finished a nibble before getting this.
             Serial.println("PE1");  // Report framing error. Normally we wouldn't call Serial.println in the interrupt, but something has gone wrong anyway.
