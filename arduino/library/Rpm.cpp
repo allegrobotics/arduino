@@ -11,11 +11,7 @@
  */
 
 // CAVEAT: Assumes that Serial will be set up (ie Serial.start(NNN) will be called) before setup() is run.
-// Serial.start(9600); is good, but Serial.start(19200); might be good too, depending on what else is run.
-
-// Which board we are compiling for
-// We will definitely need this if we are using the 'proper' attachInterrupt() calls, but we are cheating anyway.
-//#define ARDUINO_NANO
+// Serial.start(9600); is good, but Serial.start(19200); might be good too, depending on what else is being run.
 
 #include <Arduino.h>
 
@@ -120,7 +116,7 @@ void Rpm::sendRpmViaSerialPort() {
 void Rpm::setup() {
     pinMode(pin, INPUT_PULLUP); // Read from spark-plug pin
     //attachInterrupt(digitalPinToInterupt(pin), pulseReceived, FALLING);
-    attachInterrupt(pinInterrupt, pulseReceived, FALLING); // D2 is pinInterrupt 0, and D3 is pinInterrupt 1 on Nano and similar.
+    attachInterrupt(pinInterrupt, pulseReceived, FALLING);
     previousMillis = millis();
     //Serial.begin(19200); must be done in .ino
     rpmPacket[0] = 'R';

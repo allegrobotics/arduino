@@ -11,10 +11,6 @@
 // CAVEAT: Assumes that Serial will be set up (ie Serial.start(NNN) will be called) before setup() is run.
 // Serial.start(9600); is good, but Serial.start(19200); might be better, depending on what else is being run.
 
-// Which board we are compiling for
-// We will definitely need this if we are using the 'proper' attachInterrupt() calls, but we are cheating anyway.
-//#define ARDUINO_NANO
-
 #include <Arduino.h>
 
 #include "WaterDispenser.h"
@@ -42,8 +38,6 @@ void WaterDispenser::pulseReceivedFromFlowMeter() {
     pulseCount++;
 }
 
-/**
- * Sets up the interrupt.
 /**
  * Should be called by setup() in the .ino sketch.
  * PREREQUISITE: Serial.begin(...) must be called before this.

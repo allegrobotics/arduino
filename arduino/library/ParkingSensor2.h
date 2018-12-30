@@ -51,8 +51,10 @@
  * Each bit is 266us HIGH, 266us { LOW if 1, HIGH if 0 }, 266us LOW.
  * So the easiest way to read the data is to measure the duration of the HIGH periods. 266us is '0', 532us is '1', > 900us is a break between packets (but be warned there are two of them).
  *
- * BUGS
- * Ignores the SENSOR pin passed to constructor. Always uses pin D2.
+ * DIGITAL_PIN_TO_INTERRUPT
+ *     digitalPinToInterrupt() doesn't seem to be available in the arduino environment, so we have to hardwire values.
+ *     On the Nano (and Uno etc) there are two interrupts: interrupt 0 which can be used on pin D2, and interrupt 1 which can be used on pin D3.
+ *     On the Nano (and Uno etc) digitalPinToInterrupt(2) should return 0, and digitalPinToInterrupt(3) should return 1.
  */
 
 #ifndef ParkingSensor2_h

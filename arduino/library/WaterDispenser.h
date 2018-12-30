@@ -34,10 +34,10 @@
  *      UNTESTED AS AT 2018-11-11
  * REQUIREMENTS
  *      Assumes that Serial.begin(...) has been called before setup() is run.
- * BUGS
- * Ignores the flowMeterPin passed to constructor. Always uses pin D3.
- * PARAMETERS
-        flomMeterPinInterrupt on Nano and similar use 0 for pin D2, and 1 for pin D3.
+ * DIGITAL_PIN_TO_INTERRUPT
+ *     digitalPinToInterrupt() doesn't seem to be available in the arduino environment, so we have to hardwire values.
+ *     On the Nano (and Uno etc) there are two interrupts: interrupt 0 which can be used on pin D2, and interrupt 1 which can be used on pin D3.
+ *     On the Nano (and Uno etc) digitalPinToInterrupt(2) should return 0, and digitalPinToInterrupt(3) should return 1.
  */
 
 #ifndef WaterDispenser_h

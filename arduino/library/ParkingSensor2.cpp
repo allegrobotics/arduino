@@ -8,10 +8,6 @@
  *     Scott BARNES 2017/2018. IP freely on non-commercial applications.
  */
 
-// Which board we are compiling for
-// We will definitely need this if we are using the 'proper' attachInterrupt() calls, but we are cheating anyway.
-//#define ARDUINO_NANO
-
 #include <Arduino.h>
 
 #include "ParkingSensor2.h"
@@ -89,11 +85,10 @@ void ParkingSensor2::risingEdge() {
     // The 'correct' form of the attachInterrupt call:
     //attachInterrupt(digitalPinToInterrupt(PWM_READ_PIN), fallingEdge, FALLING);
     // .. but that fails for some reason (old .h libraries?), so for the Nano we just cheat and use this:
-    attachInterrupt(0, fallingEdge, FALLING);
+    attachInterrupt(pinInterrupt, fallingEdge, FALLING);
 }
 
 /**
- * Sets up the interrupt and packet structure.
  * Should be called by setup() in the .ino sketch.
  * PREREQUISITE: Serial.begin(...) must be called before this.
  */
@@ -102,7 +97,7 @@ void ParkingSensor2::setup() {
     // The 'correct' form of the attachInterrupt call:
     //attachInterrupt(digitalPinToInterrupt(PWM_READ_PIN), risingEdge, RISING);
     // .. but that fails for some reason (old .h libraries?), so for the Nano we just cheat and use this:
-    attachInterrupt(0, risingEdge, RISING);
+    attachInterrupt(pinInterrupt, risingEdge, RISING);
     //Serial.begin(19200);             // The Nano seems to be reliable at this speed. Must be done by .ino
     parkingSensorHostPacket[0] = 'P';  // P header byte for packet.
     parkingSensorHostPacket[4] = '\r';

@@ -29,14 +29,13 @@
  *      The sparks cause a voltage drop, which calls an interrupt, the interrupt maintains the 'smoothedRpm' value.
  *      The normal Arduino 'loop()' call sends the current value to the host every REFRESH_INTERVAL_MS.
  *      This means the host will be receiving updates at a constant rate regardless of the RPM of the motor.
- * PLAYING WITH OTHERS
- *      In principle this could co-exist with other modules such as the ParkingSensor1 or ParkingSensor2 modules, however the protocol
- *      would have to to be modified to distinguish between packet types.
  * TESTING
  * AS AT 2018-10-01 THIS IS UNTESTED.
  * 
- * BUGS
- * Ignores the SENSOR pin passed to constructor. Always uses pin D3.
+ * DIGITAL_PIN_TO_INTERRUPT
+ *     digitalPinToInterrupt() doesn't seem to be available in the arduino environment, so we have to hardwire values.
+ *     On the Nano (and Uno etc) there are two interrupts: interrupt 0 which can be used on pin D2, and interrupt 1 which can be used on pin D3.
+ *     On the Nano (and Uno etc) digitalPinToInterrupt(2) should return 0, and digitalPinToInterrupt(3) should return 1.
  */
 
 #ifndef Rpm_h

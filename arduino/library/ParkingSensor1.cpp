@@ -24,20 +24,13 @@ byte numBitsRead = 0;             // Num of bits read so far in this packet.
 byte nibbleBeingRead = 0;         // Nibbles are built up one bit at a time.
 byte nibbleCount = 0;             // 0..5
 
-char lineToHost[37];              // A line to write host.
+char lineToHost[31];              // A line to write host.
 volatile byte dataAvailable = 0;  // Set to true when we want loop() to write more data to the host.
 
 extern Blinker blinker;
 
 byte ParkingSensor1::pin;
 byte ParkingSensor1::pinInterrupt;
-
-/*
-ParkingSensor1::ParkingSensor1() {
-    this->pin = READ_PIN;
-    dataLastSentAt = 0L;
-}
-*/
 
 /**
  * @param pinInterrupt must be digitalPinToInterrupt(pin)
@@ -54,17 +47,19 @@ ParkingSensor1::ParkingSensor1(byte pin, byte pinInterrupt) {
 void ParkingSensor1::risingEdge() {
     int pwmValue = micros() - timeOfFall;
     // The 'correct' form of the attachInterrupt call:
-    //attachInterrupt(digitalPinToInterrupt(READ_PIN), fallingEdge, FALLING);
+    //attachInterrupt(digitalPinToInterrupt(pin), fallingEdge, FALLING);
     // .. but that fails for some reason (old .h libraries?), so for the Nano and similar we use:
-    pinMode(pin, INPUT_PULLUP);
     attachInterrupt(pinInterrupt, fallingEdge, FALLING);
     if (pwmValue > 900) {           // This is one of the big end-frame or start-frame lows.
         if (numBitsRead % 4 != 0)   // We should have finished a nibble before getting this.
-            Serial.println("PE1");  // Report framing error. Normally we wouldn't call Serial.println in the interrupt, but something has gone wrong anyway.
+            Serial.print("PE\n");  // Report framing error. Normally we wouldn't call Serial.println in the interrupt, but something has gone wrong anyway.
         nibbleCount = 0;
+        /*
         if (pwmValue > 2000) {      // This is the BIG gap between frames.
-            Serial.println("PE2");  // This does CR/LF. LF-only would be more efficient.
+            Serial.print("PF\n");  // This does CR/LF. LF-only would be more efficient.
+            Serial.println(pwmValue);  // ONLY FOR TESTING.
         }
+        */
         numBitsRead = 0;
         nibbleBeingRead = 0;        // Bits so-far get discarded if there is a framing error.
     } else {
@@ -77,7 +72,7 @@ void ParkingSensor1::risingEdge() {
         numBitsRead++;
         if (numBitsRead % 4 == 0) { // We have completely read a nibble.
             //Serial.print(hex[nibbleBeingRead]);
-            lineToHost[(1 + (nibbleCount >> 1) * 6) + (nibbleCount & 0x1)] = "0123456789ABCDEF"[nibbleBeingRead]; // Weird index to place hex in right place in line
+            lineToHost[2 + (nibbleCount >> 1) * 5 + (nibbleCount & 0x1)] = "0123456789ABCDEF"[nibbleBeingRead]; // Weird index to place hex in right place in line
             nibbleCount++;
             if (nibbleCount >= 12) {
                 dataAvailable = 1; // Let the loop() know about this.
@@ -94,9 +89,9 @@ void ParkingSensor1::risingEdge() {
 void ParkingSensor1::fallingEdge() {
     timeOfFall = micros();
     // The 'correct' form of the attachInterrupt call:
-    //attachInterrupt(digitalPinToInterrupt(READ_PIN), risingEdge, RISING);
+    //attachInterrupt(digitalPinToInterrupt(pin), risingEdge, RISING);
     // .. but that fails for some reason (old .h libraries?), so for the Nano we just cheat and use this:
-    attachInterrupt(0, risingEdge, RISING);
+    attachInterrupt(pinInterrupt, risingEdge, RISING);
 }
 
 /**
@@ -105,13 +100,14 @@ void ParkingSensor1::fallingEdge() {
  * PREREQUISITE: Serial.begin(...) must be called before this.
  */
 void ParkingSensor1::setup() {
+    pinMode(pin, INPUT_PULLUP);
     // The 'correct' form of the attachInterrupt call:
-    //attachInterrupt(digitalPinToInterrupt(READ_PIN), risingEdge, RISING);
+    //attachInterrupt(digitalPinToInterrupt(pin), risingEdge, RISING);
     // .. but that fails for some reason (old .h libraries?), so for the Nano we just cheat and use this:
-    attachInterrupt(0, risingEdge, RISING);
+    attachInterrupt(pinInterrupt, risingEdge, RISING);
     //Serial.begin(19200);             // The Nano seems to be reliable at this speed. Must be done in .ino
-    strcpy(lineToHost, "PaXX\r\nPbXX\r\PcXX\r\nPdXX\r\nPeXX\r\nPhXX\r\n");
-    Serial.println("I ParkingSensor1 ready.");
+    strcpy(lineToHost, "PaXX\nPbXX\nPcXX\nPdXX\nPeXX\nPhXX\n");
+    Serial.print("I ParkingSensor1 ready.\n");
 }
 
 /**
