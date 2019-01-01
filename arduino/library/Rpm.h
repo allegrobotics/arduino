@@ -3,7 +3,7 @@
  * UNTESTED/WIP
  *     ************ UNTESTED AS AT 2018-10-03.
  * NAME
- *     Rpm.h
+ *     Rpm
  * PRECIS
  *     An arduino-based RPM meter - which recieves pulses on the interrupt pin (probably from a spark plug clamp), and periodically sends the interrupts-per-minute as bytes on the Serial port.
  * COPYRIGHT

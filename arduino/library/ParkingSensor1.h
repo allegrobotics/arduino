@@ -1,7 +1,7 @@
 //-*- mode: c -*-
 /* 
  * NAME
- *     ParkingSensor1.h
+ *     ParkingSensor1
  * SEE
  *     http://allegrobotics.com/parkingSensor.html
  * PURPOSE
@@ -21,8 +21,8 @@
  * OUTPUT FORMAT TO HOST
  * Sends to host text lines many times a second of the form "SXX" where S is the sensor (A,B,C,D,E,F,G,H) and XX is the distance in cm expressed as hex ('FF' is max distance - ie no measurement).
  * This will normally be in cycles of six (A,B,C,D,E,H sensors F and G normally don't work in 'reverse' mode).
- * eg A15\r\nBFF\r\nCFF\r\nDFF\r\nE40\r\nH44\r\n
- * Means A has detected a 21cm object, E has detected a 64cm object, H has detected a 68cm object and the rest have detected nothing.
+ * eg: the line "Pa15\r\nPbFF\r\nPcFF\r\nPdFF\r\nPe40\r\nPh44\r\n"
+ * Means sensor A has detected a 21cm object, E has detected a 64cm object, H has detected a 68cm object and the rest have detected nothing.
  *
  * SEE ALSO
  * ParkingSensor1.java - some Java code which talks to this. If you change this code you may have to change that too.
@@ -69,12 +69,19 @@ public:
     void setup();
     void loop(uint32_t now);
 private:
-    static byte pinInterrupt;
-    static byte pin;
-    uint32_t dataLastSentAt;   // The time (millis()) we last sent some data to the host.
     static void risingEdge();
     static void fallingEdge();
-    //void initializePins(void);
+    uint32_t dataLastSentAt;   // The time (millis()) we last sent some data to the host.
+    byte pin;
+    static byte pinInterrupt;
+    static char *hex;
+    static uint32_t timeOfFall;
+    static byte numBitsRead;
+    static byte byteCount;
+    static byte byteBeingRead;
+    static char lineToHost[];
+    volatile static byte dataIsAvailable;
+    volatile static byte errorNumber;
 };
 
 #endif /* ParkingSensor1_h */

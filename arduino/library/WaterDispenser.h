@@ -1,7 +1,7 @@
 //-*- mode: c -*-
 /* 
  * NAME
- *     WaterDispenser.h
+ *     WaterDispenser
  * PRECIS
  *     An Arduino-based water dispenser, which
  *     0. Is controlled by, and reports to, a host computer (eg RPi) via the USB RX/TX interface.

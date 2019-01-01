@@ -1,11 +1,13 @@
 //-*- mode: c -*-
 /* 
- * NAME
+ * FILE
  *     ParkingSensor2.cpp
  * AUTHOR
  *     Scott BARNES
  * COPYRIGHT
  *     Scott BARNES 2017/2018. IP freely on non-commercial applications.
+ * SEE
+ *     http://allegrobotics.com/parkingSensor.html
  */
 
 #include <Arduino.h>
@@ -93,12 +95,12 @@ void ParkingSensor2::risingEdge() {
  * PREREQUISITE: Serial.begin(...) must be called before this.
  */
 void ParkingSensor2::setup() {
+    //Serial.begin(19200);             // The Nano seems to be reliable at this speed. Must be done by .ino
     pinMode(pin, INPUT_PULLUP);
     // The 'correct' form of the attachInterrupt call:
     //attachInterrupt(digitalPinToInterrupt(PWM_READ_PIN), risingEdge, RISING);
     // .. but that fails for some reason (old .h libraries?), so for the Nano we just cheat and use this:
     attachInterrupt(pinInterrupt, risingEdge, RISING);
-    //Serial.begin(19200);             // The Nano seems to be reliable at this speed. Must be done by .ino
     parkingSensorHostPacket[0] = 'P';  // P header byte for packet.
     parkingSensorHostPacket[4] = '\r';
     parkingSensorHostPacket[5] = '\n';

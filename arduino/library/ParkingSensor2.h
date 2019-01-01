@@ -1,7 +1,7 @@
 //-*- mode: c -*-
 /* 
  * NAME
- *     parkingsensor2.h
+ *     ParkingSensor2
  * SEE
  *     http://allegrobotics.com/parkingSensor.html
  * PURPOSE
@@ -21,8 +21,8 @@
  * OUTPUT FORMAT TO HOST
  * Sends to host text Lines 30 times a second of the form "SXX" where S is the sensor (A,B,C,D,E,F,G,H) and XX is the distance in cm expressed as hex ('FF' is max distance - ie no measurement).
  * This will normally be in cycles of six (A,B,C,D,E,H sensors F and G normally don't work in 'reverse' mode).
- * eg A15\r\nBFF\r\nCFF\r\nDFF\r\nE40\r\nH44\r\n
- * Means A has detected a 21cm object, E has detected a 64cm object, H has detected a 68cm object and the rest have detected nothing.
+ * eg Pa15\r\nPbFF\r\nPcFF\r\nPdFF\r\nPe40\r\nPh44\r\n
+ * Means sensor A has detected a 21cm object, E has detected a 64cm object, H has detected a 68cm object and the rest have detected nothing.
  * 
  * SEE ALSO
  * ParkingSensor2.java - some Java code which talks to this. If you change this code you may have to change that too.
@@ -74,10 +74,9 @@ public:
     static byte pin;
     static byte pinInterrupt;
     uint32_t dataLastSentAt;             // The time (millis()) that we last sent data to the host.
-    volatile int sensorTimesDistanceCm; // Cubby for value to send to the host. This is the sensor (a = 0, b = 1 .. h = 7
+    //volatile int sensorTimesDistanceCm; // Cubby for value to send to the host. This is the sensor (a = 0, b = 1 .. h = 7)
     static void risingEdge();
     static void fallingEdge();
-    //void initializePins(void);
     static char *hex;
 };
 

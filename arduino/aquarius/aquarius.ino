@@ -1,13 +1,14 @@
 //-*- mode: c -*-
 /* 
  * NAME
- *     waterdispenser.ino
+ *     aquarius.ino
  * PURPOSE
- *     Testbed for the water dispenser Aquarius.
+ *     The code to run on the Nano in the Aquarius rover.
  * NOTE
  *     UNTESTED AS AT 2018-11-11
  * SEE
  *     http://allegrobotics.com/aquarius.html
+ *     http://allegrobotics.com/parkingSensor.html
  * COPYRIGHT
  *     Scott BARNES 2018. IP freely on non-commercial applications.
  */
@@ -39,10 +40,12 @@ Bumper bumper(BUMPER_PIN);
 void setup() {
     delay(2000);
     Serial.begin(19200);
+    Serial.println("I Aquarius starting.");
     blinker.setup();
     waterDispenser.setup();
     parkingSensor.setup();
     bumper.setup();
+    Serial.println("I Aquarius started.");
 }
 
 void loop() {

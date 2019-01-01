@@ -1,6 +1,6 @@
 //-*- mode: c -*-
 /* 
- * NAME
+ * FILE
  *     WaterDispenser.cpp
  * AUTHOR
  *     Scott BARNES
@@ -32,7 +32,7 @@ WaterDispenser::WaterDispenser(byte floatPin, byte pumpPin, byte flowMeterPin, b
 }
 
 /**
- * Called every spark.
+ * Called at every pulse-counter pulse by the interrupt.
  */
 void WaterDispenser::pulseReceivedFromFlowMeter() {
     pulseCount++;
@@ -58,13 +58,14 @@ void WaterDispenser::setup() {
  * @param now approximately millis()
  */
 void WaterDispenser::switchPump(byte mode, uint32_t now) {
-    //Serial.println("DI switch pump");
+    Serial.print("DI switch pump to mode "); Serial.println(mode);
     digitalWrite(pumpPin, mode ? LOW : HIGH); // Reversed from intuition - change if required.
     pumpStartedAt = mode ? now : 0;
     blinker.setBlinkPattern(mode ? BLINK_22 : BLINK_21);
+    Serial.println(pumpStartedAt == 0 ? "DP0" : "DP1");
 }
 
-byte inputState = 0; // 0=>idle 1=>just read new line 2=>just read 'P' after new line
+byte inputState = 0; // 0=> at start of line; 1=>just read D at start of line; 2=>must read to end of line
 
 /**
  * Called by the Arduino library continually after setup().
@@ -84,22 +85,24 @@ void WaterDispenser::loop(uint32_t now) {
         Serial.println(pumpStartedAt == 0 ? "DP0" : "DP1");
         nextReportAt = now + 500;
     }
-    while (Serial.available()) {
-        char c = Serial.read(); // Will not block
-        if (c == '\n') {
-            inputState = 1;     // New line read, now look for 'D'
-            //Serial.println("DI read eol");
-        } else if (inputState == 1 && c == 'D') {
-            inputState = 2;     // Next char should be a '0' or '1', to turn on or off pump.
+    int c = 0;
+    // BUG: We assume here that we are the only module reading from Serial. If not, write an on-Arduino exploder.
+    if ((c = Serial.read()) != -1) {
+        //Serial.print("DI Just read a "); Serial.println(c);
+        if (c == '\n' || c == '\r') {
+            inputState = 0;     // At start of line
+            //Serial.println("DI read EoL");
+        } else if (inputState == 0 && c == 'D') { // Read 'D' at start of line.
+            inputState = 1;     // Next char should be a '0' or '1', to turn on or off pump.
             //Serial.println("DI read D");
-        } else if (inputState == 2 && c == '0') {
+        } else if (inputState == 1 && c == '0') {
             switchPump(0, now);
-            inputState = 0;
-        } else if (inputState == 2 && c == '1') {
+            inputState = 2; // must read to end-of-line
+        } else if (inputState == 1 && c == '1') {
             switchPump(1, now);
-            inputState = 0;
+            inputState = 2; // must read to end-of-line
         } else {
-            inputState = 0;
+            inputState = 2; // must read to end-of-line
         }
     }
 }
