@@ -55,9 +55,10 @@ private:
     byte pin;
     byte pinInterrupt;
     void initializePins(void);
-    void sendRpmViaSerialPort();
+    void sendRpmViaSerialPort(uint32_t now);
     static char *hex;
-    static unsigned long previousMillis;
+    uint32_t nextReportAt;
+    static volatile uint32_t lastSparkAt;
     static volatile int smoothedRpm;
     static void pulseReceived();
 };
