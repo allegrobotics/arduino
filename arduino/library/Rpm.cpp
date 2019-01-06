@@ -1,7 +1,5 @@
 //-*- mode: c -*-
 /* 
- * UNTESTED/WIP
- *     ************ UNTESTED AS AT 2018-10-03.
  * FILE
  *     Rpm.cpp
  * AUTHOR
