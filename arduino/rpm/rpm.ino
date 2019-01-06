@@ -1,7 +1,5 @@
 //-*- mode: c -*-
 /* 
- * WARNING/WIP
- *     AS AT 2018-11-03 THIS HAS NOT BEEN TESTED.
  * NAME
  *     rpm.ino
  * PURPOSE
@@ -9,7 +7,7 @@
  * SEE
  *     http://allegrobotics.com/rpm.html
  * COPYRIGHT
- *     Scott BARNES 2018. IP freely on non-commercial applications.
+ *     Scott BARNES 2018/2019. IP freely on non-commercial applications.
  */
 
 #include <Arduino.h>
