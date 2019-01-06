@@ -18,24 +18,24 @@
  *      The Arduino MUST be protected from high voltage.
  *      Some 4-stroke engines use a 'wasted spark', some don't. So it may be necessary to double the reported RPM to get the actual value, or it may not. Suck it and see.
  * OUTPUT TO HOST
- *      Host will receive a packet every REFRESH_INTERVAL_MS milliseconds (eg 100 == 10 times per second, check the code).
- *      Multiply this (unsigned) byte by 32 to get the RPM.
- *      "Rxx" (xx is rpm >> 5)
+ *      Host will receive a packet every REFRESH_INTERVAL_MS milliseconds (eg 100 == 10 times per second, check the code), in the form
+ *      "Rxxx" (xxx is rpm expressed as hex).
+ *      Values above 8192 are expressed as "FFF"
+ *      When the RPM drops to zero, the module will report low values (< 0x00F) due to the smoothing used.
  * ALGORITHM
- *      Smoothing is done by a modified exponential smoothing filter. The smoothiness depends on the ALPHA value.
- *      The output byte is (rpm >> 5) which will give a range of (0..8160) RPM and a resolution of 32 RPM.
- *      Good enough for the bush, and must simpler than using a complex packet-based sending approach.
+ *      Smoothing is done by a modified exponential smoothing filter, which tries to smooth over REFRESH_INTERVAL_MS (200ms by default).
  * PHILOSOPHY
  *      The sparks cause a voltage drop, which calls an interrupt, the interrupt maintains the 'smoothedRpm' value.
  *      The normal Arduino 'loop()' call sends the current value to the host every REFRESH_INTERVAL_MS.
  *      This means the host will be receiving updates at a constant rate regardless of the RPM of the motor.
- * TESTING
- * AS AT 2018-10-01 THIS IS UNTESTED.
- * 
  * DIGITAL_PIN_TO_INTERRUPT
  *     digitalPinToInterrupt() doesn't seem to be available in the arduino environment, so we have to hardwire values.
  *     On the Nano (and Uno etc) there are two interrupts: interrupt 0 which can be used on pin D2, and interrupt 1 which can be used on pin D3.
  *     On the Nano (and Uno etc) digitalPinToInterrupt(2) should return 0, and digitalPinToInterrupt(3) should return 1.
+ * DOUBLING UP
+ *     On most 4-stroke motors, it is necessary to double the reported RPM because the spark plug only fires every second revolution
+ *     (SOME motors have a wasted spark, and will not need to be doubled - check this).
+ *     Maybe this module should actually be called SPM (Sparks Per Minute) instead of RPM, but it is what it is.
  */
 
 #ifndef Rpm_h

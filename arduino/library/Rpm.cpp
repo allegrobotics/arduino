@@ -37,6 +37,8 @@ extern Blinker blinker;
 volatile uint32_t Rpm::lastSparkAt;
 volatile int Rpm::smoothedRpm;
 
+volatile int deltaTMs = 0;
+
 /*
  * @param pinInterrupt must be digitalPinToInterrupt(pin)
  */
@@ -65,19 +67,20 @@ void Rpm::pulseReceived() {
       Which should be quite fast to compute even on a cheapie Arduino such as a Nano.
      */
     unsigned long now = millis();
-    int deltaT = now - lastSparkAt;
-    if (deltaT < 6)
+    int delta = now - lastSparkAt;
+    if (delta < 6)
         return; // We may get multiple triggers from a single spark. They seem to echo for around 5ms. With a 6m 'debounce', we can't measure RPM faster than 60000/6 == 10000 rpm. Suffer.
-    int currentRpm = 60000 / deltaT;
-    if (deltaT >= REACTION_TIME_MS) {
-        //smoothedRpm = 60000 / deltaT;
-        smoothedRpm = 60000 / deltaT;
+    deltaTMs = delta;
+    int currentRpm = 60000 / deltaTMs;
+    if (deltaTMs >= REACTION_TIME_MS) {
+        //smoothedRpm = 60000 / deltaTMs;
+        smoothedRpm = 60000 / deltaTMs;
         //smoothedRpm = currentRpm;
     } else {
-        smoothedRpm = 60000 / REACTION_TIME_MS + ((REACTION_TIME_MS - deltaT) * smoothedRpm) / REACTION_TIME_MS;
+        smoothedRpm = 60000 / REACTION_TIME_MS + ((REACTION_TIME_MS - (long) deltaTMs) * (long) smoothedRpm) / REACTION_TIME_MS;
         /*
-        long deltaT10 = (long) deltaT << 10;
-        smoothedRpm = (int) ((deltaT10 / REACTION_TIME) * currentRpm + ((1024 - deltaT10 / REACTION_TIME) * smoothedRpm)) >> 10;
+        long deltaTMs10 = (long) deltaTMs << 10;
+        smoothedRpm = (int) ((deltaTMs10 / REACTION_TIME) * currentRpm + ((1024 - deltaTMs10 / REACTION_TIME) * smoothedRpm)) >> 10;
         */
     }
     lastSparkAt = now;
@@ -85,7 +88,7 @@ void Rpm::pulseReceived() {
 
 char *Rpm::hex = "0123456789ABCDEF";
 
-char rpmPacket[6]; // "Rxx\r\n\0" xx is hex of RPM
+char rpmPacket[7]; // "Rxxx\r\n\0" xxx is hex of RPM up to 8192, and 'FFF' thereafter.
 
 /**
  * Called every _refreshIntervalMs_ from loop().
@@ -102,15 +105,17 @@ void Rpm::sendRpmViaSerialPort(uint32_t now) {
         // Maybe we have stopped, or at least slowed down considerably.
         rpm = 30000 / (now - lastSparkAt); // Assume next spark will be twice as long as we have been waiting. Bear in mind we will report rpm=zero at rpm=32, so we will detect stall at about 1s. Good enough for now.
     }
-    if (rpm > 8160) { // Shouldn't happen, they really don't go this fast.
+    if (rpm > 8191) { // Shouldn't happen, they really don't go this fast.
         rpmPacket[1] = 'F';
         rpmPacket[2] = 'F';
+        rpmPacket[3] = 'F';
     } else {
-        rpmPacket[1] = hex[(rpm >> 9) & 0x0f];
-        rpmPacket[2] = hex[(rpm >> 5) & 0x0f];
+        rpmPacket[1] = hex[(rpm >> 8) & 0x0f];
+        rpmPacket[2] = hex[(rpm >> 4) & 0x0f];
+        rpmPacket[3] = hex[(rpm >> 0) & 0x0f];
     }
     Serial.print(rpmPacket);
-    //Serial.println(rpm); // Debugging
+    //Serial.print(deltaTMs); Serial.print(" "); Serial.println(rpm); // Debugging only
 }
 
 /**
@@ -125,9 +130,9 @@ void Rpm::setup() {
     nextReportAt = millis();
     //Serial.begin(19200); must be done in .ino
     rpmPacket[0] = 'R';
-    rpmPacket[3] ='\r';
-    rpmPacket[4] ='\n';
-    rpmPacket[5] ='\0';
+    rpmPacket[4] ='\r';
+    rpmPacket[5] ='\n';
+    rpmPacket[6] ='\0';
     Serial.println("I Rpm ready.");
 }
 
