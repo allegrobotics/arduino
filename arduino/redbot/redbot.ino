@@ -5,8 +5,7 @@
  * PRECIS
  *     Controls the Sparkfun Robot kit (with the RPi controller replaced with Arduino Nano motor controller).
  * AUTHOR
- *     Copyright Live Software 2018-11-30 All Rights Reserved.
- *     IP Freely on non-commercial applications.
+ *     Scott BARNES 2018. IP freely on non-commercial applications.
  */
 
 #include <Arduino.h>
@@ -19,6 +18,7 @@ SonarArray          sonarArray;
 void setup() {
     delay(2000); // Let things settle.
     Serial.begin(19200);
+    while (!Serial) delay(1);
     Serial.println("I RedBot starting");
     switchDrive.setup();
     sonarArray.setup();
@@ -37,13 +37,13 @@ void loop() {
 
     int *d = sonarArray.sonarDistanceCm;
     if (d[0] >= 10 && d[0] <= 16 && d[1] > 30 && d[2] > 30) { // Wall hug
-        Serial.print("HW");
+        Serial.print("I HW");
         switchDrive.setMotorSpeed(150 - 7 * (d[0] - 13), 150 + 7 * (d[0] - 13));
     } else if (d[0] < 10 || d[1] < 30 || d[2] < 30) { // Swerve right
-        Serial.print("SR");
+        Serial.print("I SR");
         switchDrive.setMotorSpeed(200, 50);
     } else { // Curve right to try to pick up wall again.
-        Serial.print("CR");
+        Serial.print("I CR");
         switchDrive.setMotorSpeed(100, 200);
     }
     //Serial.print("\t"); Serial.print(switchDrive.leftMotorSpeed); Serial.print("\t"); Serial.println(switchDrive.rightMotorSpeed); // Debugging

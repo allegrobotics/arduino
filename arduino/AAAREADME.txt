@@ -17,12 +17,12 @@ DIRECTORY STRUCTURE
 * There are also sketches named after the robots they run in, which use multiple modules.
 * Some modules, such as the tfminilidarsweeper have not been written as C++ modules. It is not expected that this code can co-exist with other function due to performance requirements.
 
-PROTOCOL
+PROTOCOL BETWEEN HOST AND ARDUINO
 
-The packets from the Arduino to the host:
+Communication between the host and Arduino is RX/TX (via the USB port in the Nano).
 
-1. All bytes are readable characters (' ' 0x20 to '~' 0x7E)
-2. They are terminated by a LF (CR may follow, but should be ignored)
+1. All bytes both ways are readable characters (' ' 0x20 to '~' 0x7E)
+2. Bytes are sent in packets - which are complete lines - all packets are are terminated by a LF (CR may follow, but should be ignored)
 3. The first character defines the module which sent the message
    Characters are
      E General protocol error
@@ -37,15 +37,17 @@ The packets from the Arduino to the host:
      M Machismow
      O Orientation (Ahrs)
      P Parking sensor
-     D Water dispenser
      L Lidar
      R RPM meter
-     S Sabertooth controller (or other motor drive, eg HoverboardDrive)
+     S Motor controller (Sabertooth controller, HoverboardDrive etc)
      U Imu
+     W Water dispenser
      Z bumper
 4. Checksum etc could be written at the end, but are optional - they are treated as part of the payload, not the packet structure.
 
-Packets from the host to the Arduino should follow the same rules.
+There are a number of C++ modules, but the main program is always as .ino file.
+
+The main program has the responsibilty of calling
 
 Clearly this requires a reader/exploder on the host.
 

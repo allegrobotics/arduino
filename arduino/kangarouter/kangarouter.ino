@@ -1,33 +1,40 @@
 //-*- mode: c -*-
 /*
-  The Arduino which does the kangarouter functions.
-
-  This consists of 
-  * A LSM9DS1/LSM9DS0 for orientation measurement.
-  * Two ZS-X11B motor controllers (controlling for left and right BLDC motors).
-  The kangarouter does the Helm adjustment on-board because the motors have to updated / corrected very quickly to maintain direction.
-  Other rovers do the Helm adjustment in the Raspberry Pi.
-  Technically this means squirting 0-5V into the SDA/SCL instead of 3.3V, but the LSM chips seem to survive this.
-
-  This does NOT work with the LSM9DS1. There are still issues with this.
-
-PIN ASSIGNMENTS
-   0 - RX
-   1 - TX
-   2 -
-   3 - Left motor speed
-   4 - Left motor direction
-   5 - Right motor speed
-   6 - Right motor direction
-   7 - Hall effect left motor pin A (optional)
-   8 - Hall effect left motor pin B (optional)
-   9 - Hall effect left motor pin C (optional)
-  10 - Hall effect right motor pin A (optional)
-  11 - Hall effect right motor pin B (optional)
-  12 - Hall effect right motor pin C (optional)
-  13 - Blinker
-  A4 - SDA (I2C LSM9DS1/LSM9DS0)
-  A5 - SCL (I2C LSM9DS1/LSM9DS0)
+ * FILE
+ *     kangarouter.ino
+ * PURPOSE
+ *     The Arduino code running in the Arduino Nano on the kangarouter functions.
+ * SEE
+ *     http://allegrobotics.com/kangarouter.html
+ * COPYRIGHT
+ *     Scott BARNES 2019. IP freely on non-commercial applications.
+ * NOTES
+ * This consists of 
+ * * A LSM9DS1/LSM9DS0 for orientation measurement.
+ * * Two ZS-X11B motor controllers (controlling for left and right BLDC motors).
+ * The kangarouter does the Helm adjustment on-board because the motors have to updated / corrected very quickly to maintain direction.
+ * Other rovers do the Helm adjustment in the Raspberry Pi.
+ * Technically this means squirting 0-5V into the SDA/SCL instead of 3.3V, but the LSM chips seem to survive this.
+ *
+ * This does NOT work with the LSM9DS1. There are still issues with this.
+ *
+ * PIN ASSIGNMENTS
+ *   0 - RX
+ *   1 - TX
+ *   2 -
+ *   3 - Left motor  speed
+ *   4 - Left motor  direction
+ *   5 - Right motor speed
+ *   6 - Right motor direction
+ *   7 - Hall effect left  motor pin A (optional)
+ *   8 - Hall effect left  motor pin B (optional)
+ *   9 - Hall effect left  motor pin C (optional)
+ *  10 - Hall effect right motor pin A (optional)
+ *  11 - Hall effect right motor pin B (optional)
+ *  12 - Hall effect right motor pin C (optional)
+ *  13 - Blinker
+ *  A4 - SDA (I2C LSM9DS1/LSM9DS0)
+ *  A5 - SCL (I2C LSM9DS1/LSM9DS0)
  */
 
 #include "Blinker.h"
@@ -56,6 +63,7 @@ void setup() {
     ahrs.setup();
     ahrs.setReportInterval(200);
     drive.setup();
+    helm.setup();
     Serial.println("KI Kangarouter setup complete");
     blinker.setBlinkPattern(BLINK_PATTERN_13); // Setup complete, but never fed.
 }
@@ -66,8 +74,8 @@ void loop() {
     imu.loop(now);
     ahrs.loop(now);
     drive.loop(now);
-    blinker.loop(now);
     helm.loop(now);
+    blinker.loop(now);
     checkCommandInput(now);
 }
 

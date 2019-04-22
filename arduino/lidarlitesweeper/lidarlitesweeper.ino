@@ -1,15 +1,19 @@
 // -*- mode: c -*-
 /**
  * NAME
- * lidarlitesweeper.ino - a LidarLite V1 mounted on a stepper rotator.
- * PRECIS
- * Code for a stepper LidarLite-V1 sweeper - that is, a LidarLite-V1 mounted on a stepper to sweep around 360 degrees.
+ *     lidarlitesweeper.ino
+ * PURPOSE
+ *     A LidarLite V1 mounted on a stepper rotator.
+ *     Code for a stepper LidarLite-V1 sweeper - that is, a LidarLite-V1 mounted on a stepper to sweep around 360 degrees.
  * VERSION
  *     V2.0 ('Oliver' - because he is a sweeper and his name is 'Twist', get it ?)
  * TARGET HARDWARE
  *     Arduino Nano
+ * COPYRIGHT
+ *     Scott BARNES 2017/2018. IP freely on non-commercial applications.
  * DETAILS
  * Protocol is documented in LidarLiteSweeper.java.
+ * This breaks the 'normal' protocal standards for the Arduinos - its too fast and furious.
  * Basically:
  * + it sends packets (of 1 or 2 bytes)
  * + first byte in packet always has MSB set, subsequent bytes don't (like MIDI).
@@ -85,7 +89,7 @@ void step0();
 
 #define STATE_STOPPED            0
 #define STATE_WORKING            1
-#define DELAY_TIME_US          2000           // Delay between each motor step
+#define DELAY_TIME_US          2000           // Delay between each motor step (u-sec, not m-sec).
 
 // Sets a timeout to ensure no locking up of sketch if I2c communication fails.
 // Making this lower will reduce the amount of time 'in stall' where the Lidar cannot get a value, and waits and waits, but may also
@@ -171,7 +175,8 @@ void setup() {
     delay(2000);                          // Always put a delay in to enable reprogramming, or risk bricking the Nano! :(
     //Serial.begin(9600);                 // This is a good reliable speed, and hopefully fast enough when we are using the binary protocol.
     Serial.begin(38400);                  // This is a fast speed - for production.
-    if (debug) Serial.println("d Starting");
+    while (!Serial) delay(1);
+    if (debug) Serial.println("D Starting");
     //sendByte(LD_STATUS_ALIVE);
     sendInfo(LD_STATUS_ALIVE);
     delay(100);

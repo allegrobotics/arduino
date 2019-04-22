@@ -7,7 +7,7 @@
  * COPYRIGHT
  *     Scott BARNES 2019. IP freely on non-commercial applications.
  * SEE
- *     http://allegrobotics.com/parkingSensor.html
+ *     http://allegrobotics.com/kangarouter.html
  */
 
 #include <Arduino.h>

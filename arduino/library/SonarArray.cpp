@@ -2,12 +2,11 @@
 /* 
  * NAME
  *     SonarArray.cpp
- * PRECIS
+ * PURPOSE
  *     Five HCSR04s/HCSR05s for obstacle detection .. carefully placed to avoid the control pins used by the motor driver.
  *     Intention is that they run clockwise, 45 degrees apart with sonor[0] pointing left, and sonar[4] pointing right for a MazeRunner.
  * AUTHOR
- *     Copyright Live Software 2018-11-30 All Rights Reserved.
- *     IP Freely on non-commercial applications.
+ *     Scott BARNES 2018. IP Freely on non-commercial applications.
  */
 
 #include "SonarArray.h"

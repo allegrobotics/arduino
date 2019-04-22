@@ -4,8 +4,10 @@
  *     Ahrs
  * PURPOSE
  *     Given a LSM9DS0 (or, in principle an LSM9DS1), calculates its orientation
- * OUTPUT TO HOST
- *     None
+ * PROTOCOL FROM HOST
+ *     "ORnnn" changes reporting interval to every nnn ms. Value of 0 turns off reporting
+ * PROTOCOL TO HOST
+ *     "ORroll pitch yaw rollrate pitchrate yawrate" (r p y values are in degrees rr pr yr are in degrees/second) NWU
  * DEPENDENCIES
  *     Adafruit_LSMDS0 (Adafruit_LSMDS1)
  *     Adafruit_Sensor
@@ -32,10 +34,11 @@
 // HINT: LSM9DS1? Just say NO! (Use the LSM9DS0).
 
 #include <Arduino.h>
+#include "King.h"
 #include "Imu.h"
 #include "MadgwickAHRS.h"
 
-class Ahrs {
+class Ahrs : public King {
 private:
     void printFloat(float);
     Imu *imu;

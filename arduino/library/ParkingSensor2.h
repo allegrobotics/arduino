@@ -2,23 +2,22 @@
 /* 
  * NAME
  *     ParkingSensor2
+ * PURPOSE
+ *     Arduino Nano connected to a "TYPE-2" parking sensor controller to decode the PWM and send it via USB to a host (eg a RPi).
  * SEE
  *     http://allegrobotics.com/parkingSensor.html
- * PURPOSE
- * Arduino Nano connected to a "TYPE-2" parking sensor controller to decode the PWM and send it via USB to a host (eg a RPi).
+ * AUTHOR
+ *     Scott BARNES 2018. IP freely on non-commercial applications.
+ * NOTES
  * It will NOT WORK with the "TYPE-1" parking sensor controller (use ParkingSensor1 for that).
  * It assumes that the sensor is in 'reverse' mode - ie that the red and yellow wires are held high (at 12V).
  * (Making a more sophisticated version with reversing controls would be easy enough, but not yet done).
- * AUTHOR
- *     Scott BARNES
- * COPYRIGHT
- *     Scott BARNES 2018. IP freely on non-commercial applications.
  * HOW IT WORKS
  * It connects to a host (eg a Raspberry Pi) via USB (which provides power as well as comms.)
  * 12V must be supplied to the parking sensor via other means.
- * OUTPUT TO HOST
- * No data is sent from the host. Arduino to host is 9600baud.
- * OUTPUT FORMAT TO HOST
+ * PROTOCOL FROM HOST
+ * No data is sent from the host.
+ * PROTOCOL TO HOST
  * Sends to host text Lines 30 times a second of the form "SXX" where S is the sensor (A,B,C,D,E,F,G,H) and XX is the distance in cm expressed as hex ('FF' is max distance - ie no measurement).
  * This will normally be in cycles of six (A,B,C,D,E,H sensors F and G normally don't work in 'reverse' mode).
  * eg Pa15\r\nPbFF\r\nPcFF\r\nPdFF\r\nPe40\r\nPh44\r\n
@@ -61,15 +60,17 @@
 #define ParkingSensor2_h
 
 #include <Arduino.h>
+#include "King.h"
 
 #define DEFAULT_PARKING_SENSOR_PIN                  2  /* Use 2 for D2, 3 for D3 */
 #define DEFAULT_PARKING_SENSOR_PIN_INTERRUPT        0  /* digitalPinToInterrupt(DEFAULT_PARKING_SENSOR_PIN) */
 
-class ParkingSensor2 {
+class ParkingSensor2 : public King {
 public:
     ParkingSensor2(byte pin = DEFAULT_PARKING_SENSOR_PIN, byte pinInterrupt = DEFAULT_PARKING_SENSOR_PIN_INTERRUPT);
     void setup();
     void loop(uint32_t now);
+    void command(char *commandLine) {};
  private:
     static byte pin;
     static byte pinInterrupt;

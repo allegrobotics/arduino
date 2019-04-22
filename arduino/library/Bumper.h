@@ -3,11 +3,12 @@
  * NAME
  *     Bumper
  * PURPOSE
- * Monitor a bumper connected to the Arudino.
- * OUTPUT TO HOST
- * "Zns" where n is buffer number (eg '0') and s is state ('0' collision, '1' notCollision)
- * Sends a "Zn0" or "Zn1" when the state changes, or send it periodically anyway.
- * PHILOSOPHY
+ *     Monitor a bumper connected to the Arudino.
+ * PROTOCOL FROM HOST
+ *     None.
+ * PROTOCOL TO HOST
+ *     "Zns" where n is buffer number (eg '0') and s is state ('0' collision, '1' notCollision)
+ *     And Sends a "Zn0" or "Zn1" when the state changes, or send it periodically anyway.
  * AUTHOR
  *     Scott BARNES
  * COPYRIGHT
@@ -18,12 +19,14 @@
 #define Bumper_h
 
 #include <Arduino.h>
+#include "King.h"
 
-class Bumper {
+class Bumper : public King {
 public:
     Bumper(byte pin = 12);
-    void setup();
-    void loop(uint32_t now);
+    virtual void setup();
+    virtual void loop(uint32_t now);
+    virtual void command(char *commandLine) {};
 private:
     byte pin;                              // Which pin the bumper is on (bumper is a N/C switch between GND and this pin).
     byte reportedValue;                    // Most recent value reported to host.

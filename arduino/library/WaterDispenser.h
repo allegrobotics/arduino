@@ -2,7 +2,7 @@
 /* 
  * NAME
  *     WaterDispenser
- * PRECIS
+ * PURPOSE
  *     An Arduino-based water dispenser, which
  *     0. Is controlled by, and reports to, a host computer (eg RPi) via the USB RX/TX interface.
  *     1. Detects tank full (via float switch).
@@ -10,24 +10,24 @@
  *     3. Measures the quantity of water through the pump (by counting pulses from a flowMeter).
  * SEE
  *     http://allegrobotics.com/aquarius.html
- * COPYRIGHT
+ * AUTHOR
  *     Scott BARNES 2018. IP freely on non-commercial applications.
  * DETAILS
  *     1. Tank-full detection is done with a float switch.
  *     2. Tank activation is via a relay.
  *     3. Measuring water quantity is with a flowMeter.
- * RX/TX OUTPUT TO HOST
+ * PROTOCOL FROM HOST
+ *      A line starting with:
+ *      "D0" pump off.
+ *      "D1" pump on.
+ *      All other input ignored.
+ * PROTOCOL TO HOST
  *     "DJ00" tank not full, hook off
  *     "DJ11" tank full, hook on
  *     "DJ00" tank not full, hook off
  *     "DJ11" tank full, hook on
  *     "DKnnnnnn" pulse counter count (eg K12345 means counter is at 12345).
  *     "DP0" pump turned off due to no (or little) flow.
- * RX/TX INPUT FROM HOST
- *      A line starting with:
- *      "D0" pump off.
- *      "D1" pump on.
- *      All other input ignored.
  * THE HOOK
  *      Untested and und unbuilt - the hook is just a microswitch on the rover's tank which is intended to change state when the rover is in the fill position.
  * TESTING
@@ -44,12 +44,14 @@
 #define WaterDispenser_h
 
 #include <Arduino.h>
+#include "King.h"
 
-class WaterDispenser {
+class WaterDispenser : public King {
 public:
     WaterDispenser(byte floatPin, byte pumpPin, byte flowMeterPin, byte flowMeterPinInterrupt, byte hookPin);
     void setup();
     void loop(uint32_t now);
+    void command(char *commandLine);
     static void pulseReceivedFromFlowMeter();
     void sendFlowMeterCountViaSerialPort();
 private:

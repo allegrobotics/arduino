@@ -4,6 +4,12 @@
  *     StepperMotor
  * PURPOSE
  *     A little module to control a stepper motor controller such as the BIG EASY DRIVER. Or even the (not so big) EASY DRIVER.
+ * AUTHOR
+ *     Scott BARNES 2016/2017/2018. IP freely on non-commercial applications.
+ * PROTOCOL FROM HOST
+ *     None
+ * PROTOCOL TO HOST
+ *     None
  * EASYDRIVER PINS
  * Easy driver has A1 A2 B1 B2 PFD RST EN MS2 GND M+ GND +5V SLP MS1 GND STEP DIR
  * MOTORS: A1 A2 B1 B2
@@ -22,21 +28,18 @@
  * 
  * And some other stuff about step rates which I have forgotten.
  * PHILOSOPHY
- *   We use the 'loop()' mechanism instead of a customer interrupt-timer.
- *   Unfortunately this means that the smallest resolution is 1ms, which creates issues with the microstepping.
- *   This might change later.
- * AUTHOR
- *     Scott Barnes
- * COPYRIGHT
- *     Scott BARNES 2016/2017/2018. IP freely on non-commercial applications.
+ *     We use the 'loop()' mechanism instead of a customer interrupt-timer.
+ *     Unfortunately this means that the smallest resolution is 1ms, which creates issues with the microstepping.
+ *     This might change later.
  */
 
 #ifndef StepperMotor_h
 #define StepperMotor_h
 
 #include <Arduino.h>
+#include "King.h"
 
-class StepperMotor {
+class StepperMotor : public King {
 public:
     int position;    // Position (ie angle (possibly in 200ths of a rotation == 1.8 degrees)).
     int speed;       // milliseconds between pulses.
@@ -57,6 +60,11 @@ public:
      * Called often.
      */
     void loop(uint32_t now);
+
+    /**
+     * 
+     */
+    void command(char *commandLine) {};
 
     /**
      * Set the known position, of the turret.

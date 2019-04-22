@@ -88,7 +88,7 @@ void HoverboardDrive::resetMotors() {
 /**
  * Call this from Arduino loop()
  */
-void HoverboardDrive::loop(uint64_t now) {
+void HoverboardDrive::loop(uint32_t now) {
     // Nothing to do here except (possibly) some debug reporting
     if (now < nextReportAt || reportIntervalMs <= 0) // No reporting
         return;

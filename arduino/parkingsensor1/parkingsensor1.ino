@@ -1,10 +1,11 @@
 //-*- mode: c -*-
 /*
- * Example of use of ParkingSensor1 class.
- * @see
- * ParkingSensor1.h
- * ParkingSensor1.cpp
- * http://allegrobotics.com/parkingSensor.html
+ * NAME
+ *     parkingsensor1.ino
+ * PURPOSE
+ *     Example of use of ParkingSensor1 class.
+ * SEE ALSO
+ *     http://allegrobotics.com/parkingSensor.html
  * COPYRIGHT
  *     Scott BARNES 2017/2018. IP freely on non-commercial applications.
  */
@@ -22,8 +23,9 @@ ParkingSensor1 parkingSensor1(PARKING_SENSOR_PIN, PARKING_SENSOR_PIN_INTERRUPT);
 
 // The setup routine runs once when you reset.
 void setup() {
-    delay(3000); // Delay startup to be sure we can get in first to re-flash.
+    delay(2000); // Delay startup to be sure we can get in first to re-flash.
     Serial.begin(19200);
+    while (!Serial) delay(1);
     parkingSensor1.setup();
     blinker.setup();
 }

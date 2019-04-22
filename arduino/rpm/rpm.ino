@@ -22,8 +22,9 @@ Blinker blinker(LED_BUILTIN);
 Rpm rpm(RPM_PIN, RPM_PIN_INTERRUPT);          // If we intend to run this in conjunction with the ParkingSensor, then use pin D3 on the Nano.
 
 void setup() {
-    delay(3000);
+    delay(2000);
     Serial.begin(19200);
+    while (!Serial) delay(1);
     blinker.setup();
     rpm.setup();
 }

@@ -4,13 +4,9 @@
  *     Helm
  * PURPOSE
  *     High(er) level motor driver - pass a speed and direction to drive mechanism.
- * OUTPUT TO HOST
- * 
  * PHILOSOPHY
  *     Speed, not power. Helm has responsibility to do the mapping for the particular drive.
  * AUTHOR
- *     Scott BARNES
- * COPYRIGHT
  *     Scott BARNES 2018. IP freely on non-commercial applications.
  * PROTOCOL FROM HOST
  *     "H0"           - (zero) Stop immediately.
@@ -28,10 +24,11 @@
 #define Helm_h
 
 #include <Arduino.h>
+#include "King.h"
 #include "Ahrs.h"
 #include "HoverboardDrive.h"
 
-class Helm {
+class Helm : public King {
 private:
     Ahrs *ahrs;
     DifferentialDrive *drive;
@@ -42,19 +39,20 @@ private:
     float iK = 0.0;                  // Add some of this later.
     float dK = 0.5;                  // Put a value for this later, when the Hall feedback is available.
     int updateIntervalMs = 50;
-    uint64_t nextUpdateAt = 0L;
+    uint32_t nextUpdateAt = 0L;
     int goalCourse = 0;              // [0 .. 359] deg CW of N. This is the course we have been INSTRUCTED to follow.
     int goalSpeedMmPS = 0;           // [-100 .. 100] -ve is backwards. This is the speed we have been INSTRUCTED to go.
     int turningCircleMm = 520;       // In the case of Differential drive, this is the wheel base. Ackerman drive .. um .. maybe something else.
     int turnTimeMs = 1000;
 public:
     Helm(Ahrs *ahrs, DifferentialDrive *drive, int maxPower, int speedAtFullPowerMmPS);
+    virtual void setup() {}
     virtual void loop(uint32_t now);
+    virtual void command(char *commandLine);
     virtual void setCourseAndSpeed(int course, int speedMmPS, int turnTimeMs); // speedMmPS must not be -ve
     virtual void setStopped(byte stopped);
     virtual void emergencyStop();
     virtual void fullStop();
-    virtual void command(char *commandLine);
 };
 
 #endif /* Helm_h */

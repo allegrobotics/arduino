@@ -188,6 +188,7 @@ byte textHostPacket[8];   // The text packet to send to the host.
 void setup() {
     delay(2000);                                                        // Delay before anything starts, because that's good practice.
     Serial.begin(9600);                                                 // Communicate back to the host ... nice ... and ... slow.
+    while (!Serial) delay(1);
     pinMode(ledPin, OUTPUT);                                            // BLINKER
     pinMode(serialReadPin, INPUT);
     pinMode(photointerrupterPin, INPUT_PULLUP);

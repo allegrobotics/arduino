@@ -1,16 +1,12 @@
 //-*- mode: c -*-
 /*
- * The GizMow uses the ParkingSensor, the Rpm and the collision Bumper.
- * @see
- * http://allegrobotics.com/parkingSensor.html
- * ParkingSensor2.h
- * ParkingSensor2.cpp
- * Rpm.h
- * Rpm.cpp
- * Bumper.h
- * Bumper.cpp
- * Blinker.h
- * Blinker.cpp
+ * NAME
+ *     gizmow.ino
+ * PURPOSE
+ *     The code to run on the Arduino Nano in the GizMow.
+ *     The GizMow uses the ParkingSensor, the Rpm and the collision Bumper.
+ * SEE ALSO
+ *     http://allegrobotics.com/gizMow.html
  * COPYRIGHT
  *     Scott BARNES 2018. IP freely on non-commercial applications.
  */
@@ -39,6 +35,7 @@ Bumper         bumper(BUMPER_PIN);
 void setup() {
     delay(3000); // Delay startup to be sure we can get in first to re-flash.
     Serial.begin(19200);
+    while (!Serial) delay(1);
     parkingSensor.setup();
     rpm.setup();
     bumper.setup();

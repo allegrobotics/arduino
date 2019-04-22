@@ -2,10 +2,14 @@
 /* 
  * NAME
  *     Rpm
- * PRECIS
+ * PURPOSE
  *     An arduino-based RPM meter - which recieves pulses on the interrupt pin (probably from a spark plug clamp), and periodically sends the interrupts-per-minute as bytes on the Serial port.
+ * SEE
+ *     http://allegrobotics.com/rpm.html
  * COPYRIGHT
  *     Scott BARNES 2016. IP freely on non-commercial applications.
+ * PROTOCOL FROM HOST
+ *     None
  * DETAILS
  *     Some RPM meters have a inductive clamp which goes around the spark-plug lead.
  *     This will produce a short pulse whenever the spark plug fires.
@@ -15,7 +19,7 @@
  * WARNING
  *      The Arduino MUST be protected from high voltage.
  *      Some 4-stroke engines use a 'wasted spark', some don't. So it may be necessary to double the reported RPM to get the actual value, or it may not. Suck it and see.
- * OUTPUT TO HOST
+ * PROTOCOL TO HOST
  *      Host will receive a packet every REFRESH_INTERVAL_MS milliseconds (eg 100 == 10 times per second, check the code), in the form
  *      "Rxxx" (xxx is rpm expressed as hex).
  *      Values above 8192 are expressed as "FFF"
@@ -40,15 +44,17 @@
 #define Rpm_h
 
 #include <Arduino.h>
+#include "King.h"
 
 #define DEFAULT_SPARKPLUG_PIN            2 /* Use 2 for D2, 3 for D3 */
 #define DEFAULT_SPARKPLUG_PIN_INTERRUPT  0 /* digitalPinToInterrupt(DEFAULT_SPARKPLUG_PIN) */
 
-class Rpm {
+class Rpm : public King {
 public:
     Rpm(byte pin = DEFAULT_SPARKPLUG_PIN, byte pinInterrupt = DEFAULT_SPARKPLUG_PIN_INTERRUPT);
     void setup();
     void loop(uint32_t now);
+    void command(char *commandLine) {};
 private:
     byte pin;
     byte pinInterrupt;

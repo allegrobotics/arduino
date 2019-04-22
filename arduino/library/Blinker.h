@@ -3,7 +3,13 @@
  * NAME
  *     Blinker
  * PURPOSE
- * A little module to blink the LED on an Arduino for debugging and reassurance and state feedback.
+ *     A little module to blink the LED on an Arduino for debugging and reassurance and state feedback.
+ * AUTHOR
+ *     Scott BARNES 2017/2018. IP freely on non-commercial applications.
+ * PROTOCOL FROM HOST
+ *     None (though this would be a good thing to do later to control the blink pattern from the host).
+ * PROTOCOL TO HOST
+ *     None.
  * PHILOSOPHY
  * A human can reliable distiguish blinking lights at about 75ms (ie between state changes, hence a blink every 150ms).
  * We use a number of patterns which a human could describe to another human over the phone (eg one blink and then two).
@@ -20,16 +26,13 @@
  * We use the one-blink starters for 'start-up' - (eg 'init', 'contacting lidar', 'starting motor')
  * We use the two-blink starters for 'running-states' (eg 'moving', 'pausing to think')
  * We use the three-blink starters for 'error-states' (eg 'engine stalled', 'I've driven into the dam', ..)
- * AUTHOR
- *     Scott BARNES
- * COPYRIGHT
- *     Scott BARNES 2017/2018. IP freely on non-commercial applications.
  */
 
 #ifndef Blinker_h
 #define Blinker_h
 
 #include <Arduino.h>
+#include "King.h"
 
 #define BLINK_PATTERN_12 0x00000501  /* one blink then two blinks      - 'the system has started, and is in the first stage of the startup sequence' */
 #define BLINK_PATTERN_13 0x00001501  /* one blink then three blinks    - 'the system is running, and is in the second stage of the startup sequence' */
@@ -40,7 +43,7 @@
 #define BLINK_PATTERN_32 0x00000515  /* three blinks then two blinks   - 'the system is in error state _two_' */
 #define BLINK_PATTERN_33 0x00001515  /* three blinks then three blinks - 'the system is in error state _three_' */
 
-class Blinker {
+class Blinker : public King {
 private:
     byte pin;             // Which pin the LED is on. 13 on the Nano.
     uint32_t pattern;     // 32-bit pattern eg 0x00000505 is two-then-two.
@@ -49,8 +52,9 @@ private:
 public:
     Blinker(byte pin = LED_BUILTIN);
     void setBlinkPattern(uint32_t blinkPattern);
-    void setup();
-    void loop(uint32_t now);
+    virtual void setup();
+    virtual void loop(uint32_t now);
+    virtual void command(char *commandLine) {};
 };
 
 #endif /* Blinker_h */

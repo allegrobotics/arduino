@@ -3,12 +3,12 @@
  * NAME
  *     Lsm9ds1Imu
  * PURPOSE
- *     An LSM9DS1
- * OUTPUT TO HOST
- *     None
+ *     An LSM9DS1 intertial measurment unit on an Arduino.
+ * PROTOCOL FROM HOST
+ *     See parent class.
+ * PROTOCOL TO HOST
+ *     See parent class.
  * AUTHOR
- *     Scott BARNES
- * COPYRIGHT
  *     Scott BARNES 2019. IP freely on non-commercial applications.
  * COORDINATE SYSTEM
  *     XYZ=NWU (right handed, same as Madgwick)
@@ -20,6 +20,7 @@
 #define Lsm9ds1Imu_h
 
 #include <Arduino.h>
+#include "King.h"
 #include "Imu.h"
 #include "Adafruit_LSM9DS1.h"
 #include "Adafruit_Sensor.h"

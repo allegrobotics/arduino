@@ -4,6 +4,9 @@
  *     waterstation.ino
  * PURPOSE
  *    Turns a solenoid on and off at a rover's request to enable watering.
+ * AUTHOR
+ *     Scott BARNES 2018. IP freely on non-commercial applications.
+ * NOTES
  *    Assumes we are using either a LCTECH "ESP8266 RELAY V3" (ESP-01 on a single relay board) or a LCTECH "X2" (ESP-01 on a dual relay board).
  * HTTP REQUESTS
  *    "GET /water/on HTTP/1.0"      (water please)

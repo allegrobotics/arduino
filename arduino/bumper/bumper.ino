@@ -1,11 +1,14 @@
 //-*- mode: c -*-
 /*
- * Example of use of the Bumper class.
- * @see
- * Bumper.h
- * Bumper.cpp
+ * NAME
+ *     bumper.ino
+ * PURPOSE
+ *     Example of use of the Bumper class.
  * COPYRIGHT
  *     Scott BARNES 2017/2018. IP freely on non-commercial applications.
+ * SEE ALSO
+ *     Bumper.h
+ *     Bumper.cpp
  */
 
 #include <Arduino.h>
@@ -20,6 +23,7 @@ Bumper  bumper(12);
 void setup() {
     delay(3000); // Delay startup to be sure we can get in first to re-flash.
     Serial.begin(19200);
+    while (!Serial) delay(1);
     bumper.setup();
     blinker.setup();
 }

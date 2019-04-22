@@ -2,11 +2,10 @@
 /* 
  * NAME
  *     CheapieSwitchDrive.cpp
- * PRECIS
+ * PURPOSE
  *     PWM controller for the cheapie (with the RPi controller replaced with Arduino nano motor controller).
  * AUTHOR
- *     Copyright Live Software 2018-11-30 All Rights Reserved.
- *     IP Freely on non-commercial applications.
+ *     Scott BARNES 2018. IP Freely on non-commercial applications.
  * ALGORITHM
  *     Uses the PWM outputs on the digital pins to control the speed.
  */

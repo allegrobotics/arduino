@@ -40,6 +40,7 @@ Bumper bumper(BUMPER_PIN);
 void setup() {
     delay(2000);
     Serial.begin(19200);
+    while (!Serial) delay(1);
     Serial.println("I Aquarius starting.");
     blinker.setup();
     waterDispenser.setup();
@@ -54,4 +55,27 @@ void loop() {
     parkingSensor.loop(now);
     bumper.loop(now);
     blinker.loop(now);
+    checkCommandInput(now);
+}
+
+#define MAX_COMMAND_LENGTH 32 /* The maximum length of a command line from the host */
+char commandLine[MAX_COMMAND_LENGTH];
+byte commandLinePopulation = 0;
+uint32_t lastCommandReadAt = 0L;
+
+void checkCommandInput(uint32_t now) {
+    if (Serial.available()) {
+        byte b = Serial.read();
+        if (b == '\n' || b == '\r' || commandLinePopulation >= MAX_COMMAND_LENGTH - 1) {
+            commandLine[commandLinePopulation] = '\0';
+            Serial.print("KD interpret command: "); Serial.println(commandLine);
+            blinker.command(commandLine);
+            waterDispenser.command(commandLine);
+            parkingSensor.command(commandLine);
+            bumper.command(commandLine);
+            commandLinePopulation = 0;
+            lastCommandReadAt = now;
+        } else
+            commandLine[commandLinePopulation++] = b;
+    }
 }

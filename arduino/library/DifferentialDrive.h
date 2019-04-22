@@ -4,23 +4,24 @@
  *     DifferentialDrive
  * PURPOSE
  *     Controls drivers for motors on differential drive rover (wheelchair, hoverboard, balancebot etc)
- * OUTPUT TO HOST
- *     None
+ * PROTOCOL FROM HOST
+ *     Normally none if this is controlled by the Helm. Check sub-classes.
+ * PROTOCOL TO HOST
+ *     Normally none if this is controlled by the Helm. Check sub-classes.
+ * AUTHOR
+ *     Scott BARNES 2019. IP freely on non-commercial applications.
  * PHILOSOPHY
  *     Power not speed. Speed is a Helm concept.
- * AUTHOR
- *     Scott BARNES
- * COPYRIGHT
- *     Scott BARNES 2019. IP freely on non-commercial applications.
  */
 
 #ifndef DifferentialDrive_h
 #define DifferentialDrive_h
 
 #include <Arduino.h>
+#include "King.h"
 #include "DifferentialDrive.h"
 
-class DifferentialDrive {
+class DifferentialDrive : public King {
 private:
     int64_t leftMotorCount  = 0; // Iff we have encoders. Note that on BLDC motors, this is probably 120 degrees of the wheel - ie very course.
     int64_t rightMotorCount = 0; // Iff we have encoders. Note that on BLDC motors, this is probably 120 degrees of the wheel - ie very course.
@@ -38,8 +39,7 @@ public:
         this->reverseLeftMotor = reverseLeftMotor;
         this->reverseRightMotor = reverseRightMotor;
     };
-    virtual void setup();
-    virtual void loop(uint64_t now);
+    
     virtual void setMotorPowers(int leftMotorSpeed, int rightMotorSpeed);
     void setReportInterval(int reportIntervalMs) { this->reportIntervalMs = reportIntervalMs; };
 };
