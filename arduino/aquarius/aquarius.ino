@@ -11,6 +11,23 @@
  *     http://allegrobotics.com/parkingSensor.html
  * COPYRIGHT
  *     Scott BARNES 2018. IP freely on non-commercial applications.
+ * PIN ASSIGNMENTS
+ *   0 - RX
+ *   1 - TX
+ *   2 - Parking Sensor (HW interrupt 0)
+ *   3 - Flow meter (HW interrupt 1)
+ *   4 - Float (tank full)
+ *   5 - Pump on/off
+ *   6 - Bumper input
+ *   7 - Hook input (have we hooked onto the water dispesor.
+ *   8 - 
+ *   9 - 
+ *  10 - 
+ *  11 - 
+ *  12 - Bumper input
+ *  13 - LED
+ *  A4 - 
+ *  A5 - 
  */
 
 #include <Arduino.h>

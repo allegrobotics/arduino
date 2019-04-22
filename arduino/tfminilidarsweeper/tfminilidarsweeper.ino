@@ -19,6 +19,23 @@
  * SEE
  * http://allegrobotics.com/lidarLiteSweeper.html
  * http://allegrobotics.com/tfMiniLidar.html
+ * PIN ASSIGNEMENTS
+ *   0 - RX
+ *   1 - TX
+ *   2 - EasyDriver SLP
+ *   3 - EasyDriver MS1
+ *   4 - photo interrupter input
+ *   5 - serial read from TF mini lidar @ 19200
+ *   6 - 
+ *   7 - EasyDriver ENABLE
+ *   8 - EasyDriver MS2
+ *   9 - 
+ *  10 - 
+ *  11 - EasyDriver STEP
+ *  12 - EasyDriver DIR
+ *  13 - LED
+ *  A4 - 
+ *  A5 - 
  */
 
 #include <Arduino.h>

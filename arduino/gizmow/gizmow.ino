@@ -9,6 +9,23 @@
  *     http://allegrobotics.com/gizMow.html
  * COPYRIGHT
  *     Scott BARNES 2018. IP freely on non-commercial applications.
+ * PIN ASSIGNMENTS
+ *   0 - RX
+ *   1 - TX
+ *   2 - Parking Sensor (HW interrupt 0)
+ *   3 - RPM input (HW interrupt 1)
+ *   4 - 
+ *   5 - 
+ *   6 - 
+ *   7 - 
+ *   8 - 
+ *   9 - 
+ *  10 - 
+ *  11 - 
+ *  12 - Bumper input
+ *  13 - LED
+ *  A4 - 
+ *  A5 - 
  */
 
 #include <Arduino.h>
