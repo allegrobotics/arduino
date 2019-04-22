@@ -30,14 +30,19 @@ The packets from the Arduino to the host:
      D General debugging
      W General warning
      F General fatal message
+
      B Blinker
+     H Helm
+     K Kangarouter (general messages)
      M Machismow
+     O Orientation (Ahrs)
      P Parking sensor
      D Water dispenser
      L Lidar
-     Z bumper
      R RPM meter
-     S Sabertooth controller
+     S Sabertooth controller (or other motor drive, eg HoverboardDrive)
+     U Imu
+     Z bumper
 4. Checksum etc could be written at the end, but are optional - they are treated as part of the payload, not the packet structure.
 
 Packets from the host to the Arduino should follow the same rules.

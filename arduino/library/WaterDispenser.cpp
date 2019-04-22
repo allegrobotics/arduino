@@ -61,7 +61,7 @@ void WaterDispenser::switchPump(byte mode, uint32_t now) {
     Serial.print("DI switch pump to mode "); Serial.println(mode);
     digitalWrite(pumpPin, mode ? LOW : HIGH); // Reversed from intuition - change if required.
     pumpStartedAt = mode ? now : 0;
-    blinker.setBlinkPattern(mode ? BLINK_22 : BLINK_21);
+    blinker.setBlinkPattern(mode ? BLINK_PATTERN_22 : BLINK_PATTERN_21);
     Serial.println(pumpStartedAt == 0 ? "DP0" : "DP1");
 }
 
@@ -76,7 +76,7 @@ void WaterDispenser::loop(uint32_t now) {
             switchPump(0 , now);
             Serial.println("DP0");
             Serial.println("DI no flow stopping pump");
-            blinker.setBlinkPattern(BLINK_31);
+            blinker.setBlinkPattern(BLINK_PATTERN_31);
         }
         lastReportedPulseCount = pulseCount;
         Serial.print(digitalRead(floatPin) == LOW ? "DJ0" : "DJ1");

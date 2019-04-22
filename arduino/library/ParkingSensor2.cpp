@@ -143,7 +143,7 @@ void ParkingSensor2::loop(uint32_t now) {
         // This has been tested with a genuine Arduino Nano, and the cheap SumTingWong clones. Both appear to work fine.
         dataLastSentAt = now;
     }
-    blinker.setBlinkPattern(now - dataLastSentAt < 1000 ? BLINK_21   // All okay
-                            : dataLastSentAt == 0       ? BLINK_31   // Never sent data
-                            :                             BLINK_32); // Stopped sending
+    blinker.setBlinkPattern(now - dataLastSentAt < 1000 ? BLINK_PATTERN_21   // All okay
+                            : dataLastSentAt == 0       ? BLINK_PATTERN_31   // Never sent data
+                            :                             BLINK_PATTERN_32); // Stopped sending
 }

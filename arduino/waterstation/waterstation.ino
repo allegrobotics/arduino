@@ -51,16 +51,16 @@
 
 int ledPin = 0; // 1 is the LED, but it is actually TX, so making this 1 means that Serial.print*() will fail.
 
-#define BLINK_12 0x00000501 // 1 blink  then 2
-#define BLINK_13 0x00001501 // 1 blink  then 3
-#define BLINK_21 0x00000105 // 2 blinks then 1
-#define BLINK_22 0x00000505 // 2 blinks then 2
-#define BLINK_23 0x00001505 // 2 blinks then 3
-#define BLINK_31 0x00000415 // 3 blinks then 1
-#define BLINK_32 0x00000C15 // 3 blinks then 2
-#define BLINK_33 0x00001C15 // 3 blinks then 3
+#define BLINK_PATTERN_12 0x00000501 // 1 blink  then 2
+#define BLINK_PATTERN_13 0x00001501 // 1 blink  then 3
+#define BLINK_PATTERN_21 0x00000105 // 2 blinks then 1
+#define BLINK_PATTERN_22 0x00000505 // 2 blinks then 2
+#define BLINK_PATTERN_23 0x00001505 // 2 blinks then 3
+#define BLINK_PATTERN_31 0x00000415 // 3 blinks then 1
+#define BLINK_PATTERN_32 0x00000C15 // 3 blinks then 2
+#define BLINK_PATTERN_33 0x00001C15 // 3 blinks then 3
 
-uint32_t blinkMask = BLINK_12;
+uint32_t blinkMask = BLINK_PATTERN_12;
 #define NUM_BITS_IN_BLINKMASK 24
 
 byte currentBlinkMaskBit = 0;
@@ -262,7 +262,7 @@ char *requestWater(uint32_t now) {
     switch (state) {
     case STATE_IDLE:
         state = STATE_FILLING;
-        blinkMask = BLINK_12;
+        blinkMask = BLINK_PATTERN_12;
         setRelay(0, 1);
         suspendSquirtAt = now + SQUIRT_DURATION_MS;
         fillDeadlineAt = now + MAX_FILL_TIME_MS;
@@ -273,7 +273,7 @@ char *requestWater(uint32_t now) {
         state = STATE_FILLING;
     case STATE_FILLING:
         setRelay(0, 1);
-        blinkMask = BLINK_22;
+        blinkMask = BLINK_PATTERN_22;
         suspendSquirtAt = now + SQUIRT_DURATION_MS;
         mqttPublish("OKAY Continuing filling");
         return "OKAY Continuing filling";
@@ -303,7 +303,7 @@ char *fillComplete(uint32_t now) {
     case STATE_FILL_SUSPENDED:
         setRelay(0, 0);
         state = STATE_LOCKOUT;
-        blinkMask = BLINK_31;
+        blinkMask = BLINK_PATTERN_31;
         lockoutEndsAt = now + LOCKOUT_DURATION_MS;
         mqttPublish("OKAY Lockout begun");
         return "OKAY Lockout begun";
@@ -311,7 +311,7 @@ char *fillComplete(uint32_t now) {
     case STATE_LOCKOUT:
         setRelay(0, 0);
         state = STATE_LOCKOUT;
-        blinkMask = BLINK_31;
+        blinkMask = BLINK_PATTERN_31;
         lockoutEndsAt = now + LOCKOUT_DURATION_MS;
         mqttPublish("OKAY But you were locked out anyway");
         return "OKAY But you were locked out anyway";
@@ -331,13 +331,13 @@ void checkFillTimeout(uint32_t now) {
         // We might have reached either the fill deadline or the squirt deadline.
         if (now >= fillDeadlineAt) {
             state = STATE_LOCKOUT;
-            blinkMask = BLINK_31;
+            blinkMask = BLINK_PATTERN_31;
             setRelay(0, 0);
             lockoutEndsAt = now + LOCKOUT_DURATION_MS;
             mqttPublish("WARN Deadline passed, lockout started");
         } else if (now >= suspendSquirtAt) {
             state = STATE_FILL_SUSPENDED;
-            blinkMask = BLINK_22;
+            blinkMask = BLINK_PATTERN_22;
             setRelay(0, 0);
         }
         break;
@@ -346,7 +346,7 @@ void checkFillTimeout(uint32_t now) {
         if (now >= fillDeadlineAt) {
             state = STATE_LOCKOUT;
             mqttPublish("WARN Deadline passed, lockout started");
-            blinkMask = BLINK_31;
+            blinkMask = BLINK_PATTERN_31;
             setRelay(0, 0);
             lockoutEndsAt = now + LOCKOUT_DURATION_MS;
         }
@@ -356,7 +356,7 @@ void checkFillTimeout(uint32_t now) {
         if (now >= lockoutEndsAt) {
             state = STATE_IDLE;
             mqttPublish("INFO Lockout ended");
-            blinkMask = BLINK_21;
+            blinkMask = BLINK_PATTERN_21;
         }
         break;
     }

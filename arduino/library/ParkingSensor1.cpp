@@ -129,7 +129,7 @@ void ParkingSensor1::loop(uint32_t now) {
         Serial.print(lineToHost);
         dataLastSentAt = now;
     }
-    blinker.setBlinkPattern(now - dataLastSentAt < 1000 ? BLINK_21   // All okay
-                            : dataLastSentAt == 0       ? BLINK_31   // Never sent data
-                            :                             BLINK_32); // Stopped sending
+    blinker.setBlinkPattern(now - dataLastSentAt < 1000 ? BLINK_PATTERN_21   // All okay
+                            : dataLastSentAt == 0       ? BLINK_PATTERN_31   // Never sent data
+                            :                             BLINK_PATTERN_32); // Stopped sending
 }

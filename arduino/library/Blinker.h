@@ -31,14 +31,14 @@
 
 #include <Arduino.h>
 
-#define BLINK_12 0x00000501  /* one blink then two blinks      - 'the system has started, and is in the first stage of the startup sequence' */
-#define BLINK_13 0x00001501  /* one blink then three blinks    - 'the system is running, and is in the second stage of the startup sequence' */
-#define BLINK_21 0x00000105  /* two blinks then one blink      - 'the system is running, and is in the operational state _one_' */
-#define BLINK_22 0x00000505  /* two blinks then two blinks     - 'the system is running, and is in the operational state _two_' */
-#define BLINK_23 0x00001505  /* two blinks then three blinks   - 'the system is running, and is in the operational state _three_' */
-#define BLINK_31 0x00000115  /* three blinks then one blink    - 'the system is in error state _one_' */
-#define BLINK_32 0x00000515  /* three blinks then two blinks   - 'the system is in error state _two_' */
-#define BLINK_33 0x00001515  /* three blinks then three blinks - 'the system is in error state _three_' */
+#define BLINK_PATTERN_12 0x00000501  /* one blink then two blinks      - 'the system has started, and is in the first stage of the startup sequence' */
+#define BLINK_PATTERN_13 0x00001501  /* one blink then three blinks    - 'the system is running, and is in the second stage of the startup sequence' */
+#define BLINK_PATTERN_21 0x00000105  /* two blinks then one blink      - 'the system is running, and is in the operational state _one_' */
+#define BLINK_PATTERN_22 0x00000505  /* two blinks then two blinks     - 'the system is running, and is in the operational state _two_' */
+#define BLINK_PATTERN_23 0x00001505  /* two blinks then three blinks   - 'the system is running, and is in the operational state _three_' */
+#define BLINK_PATTERN_31 0x00000115  /* three blinks then one blink    - 'the system is in error state _one_' */
+#define BLINK_PATTERN_32 0x00000515  /* three blinks then two blinks   - 'the system is in error state _two_' */
+#define BLINK_PATTERN_33 0x00001515  /* three blinks then three blinks - 'the system is in error state _three_' */
 
 class Blinker {
 private:
